@@ -1,0 +1,3 @@
+[submodule "GalileoSDK"]
+	path = GalileoSDK
+	url = https://github.com/bluewhalerobot/GalileoSDK
