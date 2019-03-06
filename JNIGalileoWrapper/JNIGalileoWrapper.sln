@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNIGalileoWrapper", "JNIGalileoWrapper\JNIGalileoWrapper.vcxproj", "{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GalileoSDK", "..\GalileoSDK\GalileoSDK\GalileoSDK.vcxproj", "{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Debug|x64.ActiveCfg = Debug|x64
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Debug|x64.Build.0 = Debug|x64
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Debug|x86.ActiveCfg = Debug|Win32
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Debug|x86.Build.0 = Debug|Win32
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Release|x64.ActiveCfg = Release|x64
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Release|x64.Build.0 = Release|x64
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Release|x86.ActiveCfg = Release|Win32
+		{1DB2B9CC-1376-48C9-ACC9-36000466FCDA}.Release|x86.Build.0 = Release|Win32
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Debug|x64.ActiveCfg = Debug|x64
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Debug|x64.Build.0 = Debug|x64
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Debug|x86.ActiveCfg = Debug|Win32
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Debug|x86.Build.0 = Debug|Win32
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Release|x64.ActiveCfg = Release|x64
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Release|x64.Build.0 = Release|x64
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Release|x86.ActiveCfg = Release|Win32
+		{651A6ADC-CEA7-48BB-A89C-A1B6500D79E4}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C7496A8-85D6-4D46-A1BC-AEA5CA4D90B1}
+	EndGlobalSection
+EndGlobal
