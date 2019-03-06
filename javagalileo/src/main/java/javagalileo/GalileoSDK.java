@@ -101,6 +101,11 @@ public class GalileoSDK { // Save as HelloJNI.java
         ReleaseInstance(instance);
     }
 
+    public GALILEO_RETURN_CODE Connect(String targetID, boolean auto_connect, int timeout,
+            OnConnectEventListener onConnect, OnDisconnectEventListener onDisconnect) {
+        return Connect(instance, targetID, auto_connect, timeout, onConnect, onDisconnect);
+    }
+
     public static void main(String[] args) {
         System.out.println("Create new SDK instance");
         GalileoSDK sdk = new GalileoSDK();
