@@ -34,10 +34,10 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_ReleaseInstance
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    Connect
- * Signature: (J[BLjava/lang/Boolean;ILjavagalileo/listeners/OnConnectEventListener;Ljavagalileo/listeners/OnDisconnectEventListener;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (JLjava/lang/String;ZILjavagalileo/listeners/OnConnectEventListener;Ljavagalileo/listeners/OnDisconnectEventListener;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
  */
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
-  (JNIEnv *, jobject, jlong, jbyteArray, jobject, jint, jobject, jobject);
+  (JNIEnv *, jobject, jlong, jstring, jboolean, jint, jobject, jobject);
 
 /*
  * Class:     javagalileo_GalileoSDK

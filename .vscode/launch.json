@@ -3,10 +3,18 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - GalileoSDK",
+            "request": "launch",
+            "mainClass": "javagalileo.GalileoSDK",
+            "projectName": "javagalileo",
+            "vmArgs": "-Djava.library.path=${workspaceFolder}/JNIGalileoWrapper/x64/Debug"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "vmArgs": "-Djava.library.path=${workspaceRoot}/javagalileo/libs/win-x64",
+            "vmArgs": "-Djava.library.path=${workspaceFolder}/JNIGalileoWrapper/x64/Debug"
         }
     ]
 }
