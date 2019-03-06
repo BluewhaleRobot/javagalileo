@@ -18,7 +18,10 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "cd javagalileo;mvn clean;mvn compile;",
+            "command": "./scripts/build.sh",
+            "windows": {
+                "command": ".\\scripts\\build.ps1"
+            },
             "group": "build"
         },
         {
