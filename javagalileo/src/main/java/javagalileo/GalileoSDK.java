@@ -6,6 +6,7 @@ import javagalileo.listeners.OnGoalReachedEventListener;
 import javagalileo.listeners.OnStatusUpdateEventListener;
 import javagalileo.models.ServerInfo;
 import javagalileo.models.ServerInfo.GALILEO_RETURN_CODE;
+import javagalileo.models.GalileoStatus;;
 
 public class GalileoSDK { // Save as HelloJNI.java
     static {
@@ -22,13 +23,13 @@ public class GalileoSDK { // Save as HelloJNI.java
     private native GALILEO_RETURN_CODE Connect(long instance, String targetID, boolean auto_connect, int timeout,
             OnConnectEventListener onConnect, OnDisconnectEventListener onDisconnect);
 
-    private native ServerInfo[] GetServersOnline();
+    private native ServerInfo[] GetServersOnline(long instance);
 
-    private native ServerInfo GetCurrentServer();
+    private native ServerInfo GetCurrentServer(long instance);
 
     private native GALILEO_RETURN_CODE PublishTest(long instance);
 
-    private native long GetInstance();
+    public static native long GetInstance();
 
     private native GALILEO_RETURN_CODE SendCMD(long instance, byte[] cmd);
 
@@ -78,20 +79,20 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     private native GALILEO_RETURN_CODE StopCharge(long instance);
 
-    private native GALILEO_RETURN_CODE MoveTo(long instance, float x, float y, byte goalNum);
+    private native int MoveTo(long instance, float x, float y);
 
-    private native GALILEO_RETURN_CODE GetGoalNum(long instance, byte goalNum);
+    private native int GetGoalNum(long instance);
 
-    private native GALILEO_RETURN_CODE GetCurrentStatus(long instance);
+    private native GalileoStatus GetCurrentStatus(long instance);
 
-    private native GALILEO_RETURN_CODE SetCurrentStatusCallback(long instance,
+    private native void SetCurrentStatusCallback(long instance,
             OnStatusUpdateEventListener onStatusUpdate);
 
-    private native GALILEO_RETURN_CODE SetGoalReachedCallback(long instance, OnGoalReachedEventListener onGoalReached);
+    private native void SetGoalReachedCallback(long instance, OnGoalReachedEventListener onGoalReached);
 
     private native GALILEO_RETURN_CODE WaitForGoal(long instance, int goalIndex);
 
-    private long instance;
+    private static long instance;
 
     public GalileoSDK() {
         instance = CreateInstance();
@@ -105,6 +106,139 @@ public class GalileoSDK { // Save as HelloJNI.java
             OnConnectEventListener onConnect, OnDisconnectEventListener onDisconnect) {
         return Connect(instance, targetID, auto_connect, timeout, onConnect, onDisconnect);
     }
+
+    public ServerInfo[] GetServersOnline(){
+        return GetServersOnline(instance);
+    }
+
+    public ServerInfo GetCurrentServer(){
+        return GetCurrentServer(instance);
+    }
+
+    public GALILEO_RETURN_CODE PublishTest(){
+        return PublishTest(instance);
+    }
+
+    public GALILEO_RETURN_CODE SendCMD(byte[] cmd){
+        return SendCMD(instance, cmd);
+    }
+
+    public GALILEO_RETURN_CODE StartNav(){
+        return StartNav(instance);
+    }
+
+    public GALILEO_RETURN_CODE StopNav(){
+        return StopNav(instance);
+    }
+
+    public GALILEO_RETURN_CODE SetGoal(int goalIndex){
+        return SetGoal(instance, goalIndex);
+    }
+
+    public GALILEO_RETURN_CODE PauseGoal(){
+        return PauseGoal();
+    }
+
+    public GALILEO_RETURN_CODE ResumeGoal(){
+        return ResumeGoal(instance);
+    }
+
+    public GALILEO_RETURN_CODE CancelGoal(){
+        return CancelGoal(instance);
+    }
+
+    public GALILEO_RETURN_CODE InsertGoal(float x, float y){
+        return InsertGoal(instance, x, y);
+    }
+
+    public GALILEO_RETURN_CODE ResetGoal(){
+        return ResetGoal(instance);
+    }
+
+    public GALILEO_RETURN_CODE SetSpeed(float vLinear, float vAngle){
+        return SetSpeed(instance, vLinear, vAngle);
+    }
+
+    public GALILEO_RETURN_CODE Shutdown(){
+        return Shutdown(instance);
+    }
+
+    public GALILEO_RETURN_CODE SetAngle(byte sign, byte angle){
+        return SetAngle(instance, sign, angle);
+    }
+
+    public GALILEO_RETURN_CODE StartLoop(){
+        return StartLoop(instance);
+    }
+
+    public GALILEO_RETURN_CODE StopLoop(){
+        return StopLoop(instance);
+    }
+
+    public GALILEO_RETURN_CODE SetLoopWaitTime(byte time){
+        return SetLoopWaitTime(instance, time);
+    }
+
+    public GALILEO_RETURN_CODE StartMapping(){
+        return StartMapping(instance);
+    }
+
+    public GALILEO_RETURN_CODE StopMapping(){
+        return StopMapping(instance);
+    }
+
+    public GALILEO_RETURN_CODE SaveMap(){
+        return SaveMap(instance);
+    }
+
+    public GALILEO_RETURN_CODE UpdateMap(){
+        return UpdateMap(instance);
+    }
+
+    public GALILEO_RETURN_CODE StartChargeLocal(){
+        return StartChargeLocal(instance);
+    }
+
+    public GALILEO_RETURN_CODE StopChargeLocal(){
+        return StopChargeLocal(instance);
+    }
+
+    public GALILEO_RETURN_CODE SaveChargeBasePosition(){
+        return SaveChargeBasePosition(instance);
+    }
+
+    public GALILEO_RETURN_CODE StartCharge(float x, float y){
+        return StartCharge(instance, x, y);
+    }
+
+    public GALILEO_RETURN_CODE StopCharge(){
+        return StopCharge(instance);
+    }
+
+    public int MoveTo(float x, float y) {
+        return MoveTo(instance, x, y);
+    }
+
+    public int GetGoalNum(){
+        return GetGoalNum(instance);
+    }
+
+    public GalileoStatus GetCurrentStatus(){
+        return GetCurrentStatus(instance);
+    }
+
+    public void SetCurrentStatusCallback(OnStatusUpdateEventListener onStatusUpdate){
+        SetCurrentStatusCallback(instance, onStatusUpdate);
+    }
+
+    public void SetGoalReachedCallback(OnGoalReachedEventListener onGoalReached){
+        SetGoalReachedCallback(instance, onGoalReached);
+    }
+
+    public GALILEO_RETURN_CODE WaitForGoal(int goalIndex){
+        return WaitForGoal(instance, goalIndex);
+    }
+
 
     public static void main(String[] args) {
         System.out.println("Create new SDK instance");

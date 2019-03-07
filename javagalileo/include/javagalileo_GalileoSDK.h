@@ -42,18 +42,18 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    GetServersOnline
- * Signature: ()[Ljavagalileo/models/ServerInfo;
+ * Signature: (J)[Ljavagalileo/models/ServerInfo;
  */
 JNIEXPORT jobjectArray JNICALL Java_javagalileo_GalileoSDK_GetServersOnline
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    GetCurrentServer
- * Signature: ()Ljavagalileo/models/ServerInfo;
+ * Signature: (J)Ljavagalileo/models/ServerInfo;
  */
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_GetCurrentServer
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     javagalileo_GalileoSDK
@@ -69,7 +69,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_PublishTest
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_GetInstance
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     javagalileo_GalileoSDK
@@ -266,23 +266,23 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_StopCharge
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    MoveTo
- * Signature: (JFFB)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (JFF)I
  */
-JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_MoveTo
-  (JNIEnv *, jobject, jlong, jfloat, jfloat, jbyte);
+JNIEXPORT jint JNICALL Java_javagalileo_GalileoSDK_MoveTo
+  (JNIEnv *, jobject, jlong, jfloat, jfloat);
 
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    GetGoalNum
- * Signature: (JB)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (J)I
  */
-JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_GetGoalNum
-  (JNIEnv *, jobject, jlong, jbyte);
+JNIEXPORT jint JNICALL Java_javagalileo_GalileoSDK_GetGoalNum
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    GetCurrentStatus
- * Signature: (J)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (J)Ljavagalileo/models/GalileoStatus;
  */
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_GetCurrentStatus
   (JNIEnv *, jobject, jlong);
@@ -290,17 +290,17 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_GetCurrentStatus
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    SetCurrentStatusCallback
- * Signature: (JLjavagalileo/listeners/OnStatusUpdateEventListener;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (JLjavagalileo/listeners/OnStatusUpdateEventListener;)V
  */
-JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback
   (JNIEnv *, jobject, jlong, jobject);
 
 /*
  * Class:     javagalileo_GalileoSDK
  * Method:    SetGoalReachedCallback
- * Signature: (JLjavagalileo/listeners/OnGoalReachedEventListener;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ * Signature: (JLjavagalileo/listeners/OnGoalReachedEventListener;)V
  */
-JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback
   (JNIEnv *, jobject, jlong, jobject);
 
 /*
