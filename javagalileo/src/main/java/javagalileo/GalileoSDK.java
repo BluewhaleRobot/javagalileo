@@ -92,14 +92,19 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     private native GALILEO_RETURN_CODE WaitForGoal(long instance, int goalIndex);
 
+    private native void Dispose(long instance);
+
     private static long instance;
 
     public GalileoSDK() {
         instance = CreateInstance();
     }
 
-    public void Dispose() {
+    public void Release() {
         ReleaseInstance(instance);
+    }
+    public void Dispose(){
+        Dispose(instance);
     }
 
     public GALILEO_RETURN_CODE Connect(String targetID, boolean auto_connect, int timeout,
@@ -250,7 +255,7 @@ public class GalileoSDK { // Save as HelloJNI.java
             e.printStackTrace();
         }
         System.out.println("Release SDK instance");
-        sdk.Dispose();
+        sdk.Release();
         System.out.println("Released");
         sdk = null;
         try {

@@ -44,11 +44,9 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
     const char *target_id = env->GetStringUTFChars(targetID, NULL);
     jsize length = env->GetStringUTFLength(targetID);
     std::string target_id_str(target_id, length);
-
     // set referance to callbacks
     OnConnectCB = env->NewGlobalRef(OnConnect);
     OnDisconnectCB = env->NewGlobalRef(OnDisconnect);
-
     // parse callback
     jmethodID OnConnectID = NULL;
     if (!env->IsSameObject(OnConnect, NULL)) {
@@ -58,7 +56,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
     }
 
     jmethodID OnDisconnectID = NULL;
-    if (!env->IsSameObject(OnConnect, NULL)) {
+    if (!env->IsSameObject(OnDisconnect, NULL)) {
         jclass OnDisconnectClass = env->GetObjectClass(OnDisconnect);
         OnDisconnectID = env->GetMethodID(OnDisconnectClass, "OnDisconnected",
             "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -84,7 +82,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
             jvm->DetachCurrentThread();
         };
     }
-    
+
     if (NULL != OnDisconnectID) {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv* menv;
@@ -95,12 +93,12 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
             if (NULL != OnDisconnectID) {
                 jobject statusJ = ConvertGalileoReturnCode(menv, status);
                 jstring idJ = menv->NewStringUTF(id.data());
-                menv->CallVoidMethod(OnConnectCB, OnDisconnectID, statusJ, idJ);
+                menv->CallVoidMethod(OnDisconnectCB, OnDisconnectID, statusJ, idJ);
             }
             jvm->DetachCurrentThread();
         };
     }
-    
+
     auto res = sdk->Connect(target_id_str, auto_connect, timeout, OnConnectTmp, OnDisconnectTmp);
     env->ReleaseStringUTFChars(targetID, target_id);
     return ConvertGalileoReturnCode(env, res);
@@ -405,6 +403,16 @@ jobject ConvertGalileoStatus(JNIEnv *env, galileo_serial_server::GalileoStatus s
     env->CallVoidMethod(galileoStatusJ, setTargetStatus_method, status.targetStatus);
     jmethodID setVisualStatus_method = env->GetMethodID(galileoStatus_class, "setVisualStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setVisualStatus_method, status.visualStatus);
+    jmethodID setCurrentAngle_method = env->GetMethodID(galileoStatus_class, "setCurrentAngle", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setCurrentAngle_method, status.currentAngle);
+    jmethodID setCurrentPoseY_method = env->GetMethodID(galileoStatus_class, "setCurrentPoseY", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setCurrentPoseY_method, status.currentPosY);
+    jmethodID setCurrentPoseX_method = env->GetMethodID(galileoStatus_class, "setCurrentPoseX", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setCurrentPoseX_method, status.currentPosX);
+    jmethodID setCurrentSpeedTheta_method = env->GetMethodID(galileoStatus_class, "setCurrentSpeedTheta", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setCurrentSpeedTheta_method, status.currentSpeedTheta);
+    jmethodID setCurrentSpeedX_method = env->GetMethodID(galileoStatus_class, "setCurrentSpeedX", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setCurrentSpeedX_method, status.currentSpeedX);
     return galileoStatusJ;
 }
 
@@ -501,4 +509,10 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_WaitForGoal
     GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
     GalileoSDK::GALILEO_RETURN_CODE res = sdk->WaitForGoal(goalIndex);
     return ConvertGalileoReturnCode(env, res);
+}
+
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_Dispose
+(JNIEnv *env, jobject, jlong instance) {
+    GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
+    sdk->Dispose();
 }

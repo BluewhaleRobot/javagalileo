@@ -18,12 +18,87 @@ public class GalileoStatus {
     private int targetNumID;
     private int targetStatus;
     private int visualStatus;
+    private float currentSpeedX;
+    private float currentSpeedTheta;
+    private float currentPoseX;
+    private float currentPoseY;
+    private float currentAngle;
 
     /**
      * @return the timestamp
      */
     public long getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * @return the currentAngle
+     */
+    public float getCurrentAngle() {
+        return currentAngle;
+    }
+
+    /**
+     * @param currentAngle the currentAngle to set
+     */
+    public void setCurrentAngle(float currentAngle) {
+        this.currentAngle = currentAngle;
+    }
+
+    /**
+     * @return the currentPoseY
+     */
+    public float getCurrentPoseY() {
+        return currentPoseY;
+    }
+
+    /**
+     * @param currentPoseY the currentPoseY to set
+     */
+    public void setCurrentPoseY(float currentPoseY) {
+        this.currentPoseY = currentPoseY;
+    }
+
+    /**
+     * @return the currentPoseX
+     */
+    public float getCurrentPoseX() {
+        return currentPoseX;
+    }
+
+    /**
+     * @param currentPoseX the currentPoseX to set
+     */
+    public void setCurrentPoseX(float currentPoseX) {
+        this.currentPoseX = currentPoseX;
+    }
+
+    /**
+     * @return the currentSpeedTheta
+     */
+    public float getCurrentSpeedTheta() {
+        return currentSpeedTheta;
+    }
+
+    /**
+     * @param currentSpeedTheta the currentSpeedTheta to set
+     */
+    public void setCurrentSpeedTheta(float currentSpeedTheta) {
+        this.currentSpeedTheta = currentSpeedTheta;
+    }
+
+    /**
+     * @return the currentSpeedX
+     */
+    public float getCurrentSpeedX() {
+        return currentSpeedX;
+    }
+
+    /**
+     * @param currentSpeedX the currentSpeedX to set
+     */
+    public void setCurrentSpeedX(float currentSpeedX) {
+        this.currentSpeedX = currentSpeedX;
     }
 
     /**

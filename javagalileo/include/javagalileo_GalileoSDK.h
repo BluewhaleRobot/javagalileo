@@ -311,6 +311,14 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_WaitForGoal
   (JNIEnv *, jobject, jlong, jint);
 
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    Dispose
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_Dispose
+  (JNIEnv *, jobject, jlong);
+
 #ifdef __cplusplus
 }
 #endif
