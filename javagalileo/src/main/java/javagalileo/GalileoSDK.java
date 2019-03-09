@@ -1,17 +1,29 @@
 package javagalileo;
 
+import java.io.IOException;
+
 import javagalileo.listeners.OnConnectEventListener;
 import javagalileo.listeners.OnDisconnectEventListener;
 import javagalileo.listeners.OnGoalReachedEventListener;
 import javagalileo.listeners.OnStatusUpdateEventListener;
 import javagalileo.models.ServerInfo;
 import javagalileo.models.ServerInfo.GALILEO_RETURN_CODE;
+import javagalileo.utils.NativeUtils;
 import javagalileo.models.GalileoStatus;;
 
 public class GalileoSDK { // Save as HelloJNI.java
     static {
-        System.loadLibrary("GalileoSDK");
-        System.loadLibrary("JNIGalileoWrapper");
+        try {
+            System.loadLibrary("GalileoSDK");
+            System.loadLibrary("JNIGalileoWrapper");
+        } catch (UnsatisfiedLinkError e) {
+            try {
+                NativeUtils.loadLibraryFromJar("/" + System.mapLibraryName("GalileoSDK"));
+                NativeUtils.loadLibraryFromJar("/" + System.mapLibraryName("JNIGalileoWrapper"));
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
+        }
     }
 
     private native void sayHello();
@@ -141,7 +153,7 @@ public class GalileoSDK { // Save as HelloJNI.java
     }
 
     public GALILEO_RETURN_CODE PauseGoal(){
-        return PauseGoal();
+        return PauseGoal(instance);
     }
 
     public GALILEO_RETURN_CODE ResumeGoal(){

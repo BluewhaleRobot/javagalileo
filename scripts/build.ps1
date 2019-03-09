@@ -13,3 +13,4 @@ Set-Location target/classes
 javah -classpath . javagalileo.GalileoSDK
 Remove-Item ..\..\include\*.h
 Move-Item *.h ..\..\include
+Set-Location ..

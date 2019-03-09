@@ -3,6 +3,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - App",
+            "request": "launch",
+            "mainClass": "javagalileotest.App"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - GalileoSDK",
             "request": "launch",
             "mainClass": "javagalileo.GalileoSDK",
