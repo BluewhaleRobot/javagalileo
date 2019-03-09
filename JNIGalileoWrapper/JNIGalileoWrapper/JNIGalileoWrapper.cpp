@@ -70,7 +70,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
     if (NULL != OnConnectID) {
         OnConnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv* menv;
-            jvm->AttachCurrentThread((void**)&menv, NULL);
+            jvm->AttachCurrentThread((JNIEnv**)&menv, NULL);
             jclass OnConnectClass = menv->GetObjectClass(OnConnectCB);
             jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
                 "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -86,7 +86,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
     if (NULL != OnDisconnectID) {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv* menv;
-            jvm->AttachCurrentThread((void**)&menv, NULL);
+            jvm->AttachCurrentThread((JNIEnv**)&menv, NULL);
             jclass OnDisconnectClass = menv->GetObjectClass(OnDisconnectCB);
             jmethodID OnDisconnectID = menv->GetMethodID(OnDisconnectClass, "OnDisconnected",
                 "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -451,7 +451,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback
     if (NULL != OnUpdateID) {
         OnUpdateTmp = [](GalileoSDK::GALILEO_RETURN_CODE code, galileo_serial_server::GalileoStatus status) {
             JNIEnv* menv;
-            jvm->AttachCurrentThread((void**)&menv, NULL);
+            jvm->AttachCurrentThread((JNIEnv**)&menv, NULL);
             jclass OnUpdateClass = menv->GetObjectClass(OnStatusUpdateCB);
             jmethodID OnUpdateID = menv->GetMethodID(OnUpdateClass, "OnStatusUpdated",
                 "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljavagalileo/models/GalileoStatus;)V");
@@ -489,7 +489,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback
     if (NULL != OnGoalReachedID) {
         OnGoalReachedTmp = [](int goalIndex, galileo_serial_server::GalileoStatus status) {
             JNIEnv* menv;
-            jvm->AttachCurrentThread((void**)&menv, NULL);
+            jvm->AttachCurrentThread((JNIEnv**)&menv, NULL);
             jclass OnGoalReachedClass = menv->GetObjectClass(OnGoalReachedCB);
             jmethodID OnUpdateID = menv->GetMethodID(OnGoalReachedClass, "OnGoalReached",
                 "(ILjavagalileo/models/GalileoStatus;)V");

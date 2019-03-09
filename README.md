@@ -17,7 +17,7 @@ Galileo navigation system Java SDK
 ```powershell
 git clone https://github.com/BluewhaleRobot/javagalileo
 cd javagalileo
-git submodule update --recursive
+git submodule update --init --recursive
 powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
 ```
 
@@ -34,7 +34,7 @@ powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
 ```bash
 git clone https://github.com/BluewhaleRobot/javagalileo
 cd javagalileo
-git submodule update --recursive
+git submodule update --init --recursive
 ./scripts/package.sh
 ```
 
@@ -42,7 +42,7 @@ git submodule update --recursive
 
 ## 使用
 
-使用方法和一般的java jar文件一样。通过IDE添加到自己的项目依赖中即可。
+使用方法和一般的java jar文件一样。通过IDE添加到自己的项目依赖中即可。注意Linux版本需要保证本地已经安装了[GalileoSDK](https://github.com/bluewhalerobot/GalileoSDK)
 
 ## 例子
 
