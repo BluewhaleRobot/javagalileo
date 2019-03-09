@@ -9,6 +9,7 @@ Galileo navigation system Java SDK
 ### Windows
 
 安装 JDK 并保证设置好`JAVA_HOME`环境变量
+
 安装 maven 并保证maven已经添加到`PATH`环境变量中
 
 下载源代码
@@ -16,7 +17,25 @@ Galileo navigation system Java SDK
 ```powershell
 git clone https://github.com/BluewhaleRobot/javagalileo
 cd javagalileo
+git submodule update --recursive
 powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
+```
+
+### Linux
+
+安装JDK 并保证设置好`JAVA_HOME`环境变量
+
+安装maven
+
+安装GalileoSDK, 安装方法[参考这里](https://github.com/bluewhalerobot/GalileoSDK)
+
+下载源码
+
+```bash
+git clone https://github.com/BluewhaleRobot/javagalileo
+cd javagalileo
+git submodule update --recursive
+./scripts/package.sh
 ```
 
 程序编译完成后会在 `javagalileo/target` 文件夹内生成 `javagalileo.jar` 文件。

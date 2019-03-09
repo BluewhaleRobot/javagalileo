@@ -2,3 +2,4 @@ javagalileo/libs
 *.log
 *.class
 resources/
+build

@@ -21,5 +21,6 @@ public class Main {
             }
             timecount += 1000;
         }
+        sdk.Release();
     }
 }

@@ -1,9 +1,9 @@
-language: cpp
 git:
   depth: 1
 matrix:
   include:
     - name: Windows Release
+      language: cpp
       os: windows
       env:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
@@ -27,30 +27,41 @@ matrix:
         on:
           branch: master
           tags: true
-    # - name: Linux Build Test
-    #   sudo: required
-    #   dist: xenial
-    #   before_install:
-    #     - export DEBIAN_FRONTEND="noninteractive"
-    #     - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-    #     - sudo apt-get update -y
-    #     - sudo apt-get install -y aria2 wget
-    #     - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast -O /usr/local/sbin/apt-fast
-    #     - sudo chmod +x /usr/local/sbin/apt-fast
-    #     - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
-    #     - sudo apt-fast update -qq
-    #     - sudo apt-get install -y --allow-unauthenticated libjsoncpp-dev ros-kinetic-roscpp ros-kinetic-geometry-msgs
-    #   script:
-    #     - source /opt/ros/kinetic/setup.bash
-    #     - export LIBRARY_PATH=/opt/ros/kinetic/lib/
-    #     - cd GalileoSDK
-    #     - mkdir build
-    #     - cd build
-    #     - cmake ..
-    #     - make -j
-    #     - sudo make install
-    #     - cd ../../GalileoSDKTest
-    #     - mkdir build
-    #     - cd build
-    #     - cmake ..
-    #     - make -j
+    - name: Linux Release
+      language: java
+      sudo: required
+      dist: xenial
+      jdk:
+        - openjdk8
+      before_install:
+        - export DEBIAN_FRONTEND="noninteractive"
+        - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+        - sudo apt-get update -y
+        - sudo apt-get install -y aria2 wget
+        - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast -O /usr/local/sbin/apt-fast
+        - sudo chmod +x /usr/local/sbin/apt-fast
+        - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
+        - sudo apt-fast update -qq
+        - sudo apt-get install -y --allow-unauthenticated libjsoncpp-dev ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs
+      script:
+        - source /opt/ros/kinetic/setup.bash
+        - export LIBRARY_PATH=/opt/ros/kinetic/lib/
+        - cd GalileoSDK
+        - cd GalileoSDK
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        - ./scripts/package.sh
+        - cp javagalileo/target/javagalileo*.jar javagalileo-linux-${TRAVIS_TAG}.jar
+
+      deploy:
+        provider: releases
+        api_key: "$token"
+        file: "javagalileo-linux-${TRAVIS_TAG}.jar"
+        skip_cleanup: true
+        on:
+          branch: master
+          tags: true
