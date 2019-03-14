@@ -2,69 +2,69 @@ git:
   depth: 1
 matrix:
   include:
-    # - name: Windows Release
-    #   language: cpp
-    #   os: windows
-    #   env:
-    #     - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
-    #   script:
-    #     - export PATH=$MSBUILD_PATH:$PATH
-    #     - travis_wait choco install jdk8 -y
-    #     - export PATH=$PATH:"/c/Program Files/Java/$(ls /c/Program\ Files/Java/)/bin"
-    #     - export JAVA_HOME="/c/Program Files/Java/$(ls /c/Program\ Files/Java/)"
-    #     - echo $JAVA_HOME
-    #     - echo $PATH
-    #     - travis_wait choco install maven -y
-    #     - export PATH=$PATH:"/c/Program Files/apache-maven-3.6.0/bin"
-    #     - travis_wait powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
-    #     - cp javagalileo/target/javagalileo*.jar javagalileo-win-${TRAVIS_TAG}.jar
+    - name: Windows Release
+      language: cpp
+      os: windows
+      env:
+        - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+      script:
+        - export PATH=$MSBUILD_PATH:$PATH
+        - travis_wait choco install jdk8 -y
+        - export PATH=$PATH:"/c/Program Files/Java/$(ls /c/Program\ Files/Java/)/bin"
+        - export JAVA_HOME="/c/Program Files/Java/$(ls /c/Program\ Files/Java/)"
+        - echo $JAVA_HOME
+        - echo $PATH
+        - travis_wait choco install maven -y
+        - export PATH=$PATH:"/c/Program Files/apache-maven-3.6.0/bin"
+        - travis_wait powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
+        - cp javagalileo/target/javagalileo*.jar javagalileo-win-${TRAVIS_TAG}.jar
 
-    #   deploy:
-    #     provider: releases
-    #     api_key: "$token"
-    #     file: "javagalileo-win-${TRAVIS_TAG}.jar"
-    #     skip_cleanup: true
-    #     on:
-    #       branch: master
-    #       tags: true
-    # - name: Linux Release
-    #   language: java
-    #   sudo: required
-    #   dist: xenial
-    #   jdk:
-    #     - openjdk8
-    #   before_install:
-    #     - export DEBIAN_FRONTEND="noninteractive"
-    #     - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-    #     - sudo apt-get update -y
-    #     - sudo apt-get install -y aria2 wget
-    #     - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast -O /usr/local/sbin/apt-fast
-    #     - sudo chmod +x /usr/local/sbin/apt-fast
-    #     - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
-    #     - sudo apt-fast update -qq
-    #     - sudo apt-get install -y --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs
-    #   script:
-    #     - source /opt/ros/kinetic/setup.bash
-    #     - export LIBRARY_PATH=/opt/ros/kinetic/lib/
-    #     - cd GalileoSDK
-    #     - cd GalileoSDK
-    #     - mkdir build
-    #     - cd build
-    #     - cmake ..
-    #     - make -j
-    #     - sudo make install
-    #     - cd ../../../
-    #     - ./scripts/package.sh
-    #     - cp javagalileo/target/javagalileo*.jar javagalileo-linux-${TRAVIS_TAG}.jar
+      deploy:
+        provider: releases
+        api_key: "$token"
+        file: "javagalileo-win-${TRAVIS_TAG}.jar"
+        skip_cleanup: true
+        on:
+          branch: master
+          tags: true
+    - name: Linux Release
+      language: java
+      sudo: required
+      dist: xenial
+      jdk:
+        - openjdk8
+      before_install:
+        - export DEBIAN_FRONTEND="noninteractive"
+        - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+        - sudo apt-get update -y
+        - sudo apt-get install -y aria2 wget
+        - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast -O /usr/local/sbin/apt-fast
+        - sudo chmod +x /usr/local/sbin/apt-fast
+        - sudo wget https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
+        - sudo apt-fast update -qq
+        - sudo apt-get install -y --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs
+      script:
+        - source /opt/ros/kinetic/setup.bash
+        - export LIBRARY_PATH=/opt/ros/kinetic/lib/
+        - cd GalileoSDK
+        - cd GalileoSDK
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        - ./scripts/package.sh
+        - cp javagalileo/target/javagalileo*.jar javagalileo-linux-${TRAVIS_TAG}.jar
 
-    #   deploy:
-    #     provider: releases
-    #     api_key: "$token"
-    #     file: "javagalileo-linux-${TRAVIS_TAG}.jar"
-    #     skip_cleanup: true
-    #     on:
-    #       branch: master
-    #       tags: true
+      deploy:
+        provider: releases
+        api_key: "$token"
+        file: "javagalileo-linux-${TRAVIS_TAG}.jar"
+        skip_cleanup: true
+        on:
+          branch: master
+          tags: true
 
     - name: Android Release
       language: java
@@ -83,7 +83,7 @@ matrix:
         - sudo chmod +x /usr/local/sbin/apt-fast
         - sudo wget -q https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
         - sudo apt-fast update -qq > /dev/null
-        - sudo apt-get install -y -qq --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs ros-kinetic-ros-base > /dev/null
+        - travis_wait 20 sudo apt-get install -y -qq --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs ros-kinetic-ros-base > /dev/null
       script:
         - source /opt/ros/kinetic/setup.bash
         - export LIBRARY_PATH=/opt/ros/kinetic/lib/
@@ -92,9 +92,9 @@ matrix:
         - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
         - tar -xzf cmake-3.14.0-rc4.tar.gz > /dev/null
         - cd cmake-3.14.0-rc4/
-        - travis_wait 30 env CC=/usr/bin/clang CXX=/usr/bin/clang++ ./bootstrap --prefix=/usr --parallel=4 > cmake.log
-        - travis_wait 30 make -j > cmake.log
-        - sudo make install
+        - travis_wait 30 env CC=$(which clang) CXX=$(which clang++) ./bootstrap --prefix=/usr --parallel=4 | awk "(NR%200)==0{print;}"
+        - make | awk "(NR%200)==0{print;}"
+        - sudo make install > /dev/null
         # install ndk
         - cd ..
         - wget -q https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip
@@ -104,17 +104,14 @@ matrix:
         - git clone https://github.com/BluewhaleRobot/rostoolchain
         - export TOOLCHAIN_ROOT=$(pwd)/rostoolchain
         # install boost-android
-        - git clone https://github.com/moritz-wundke/Boost-for-Android
-        - mkdir boost_libs
-        - cd Boost-for-Android
-        - travis_wait 30 ./build-android.sh --boost=1.68.0 --prefix=$(pwd)/../boost_libs $NDK_ROOT --arch=armeabi-v7a > /dev/null
-        - cd ..
+        - wget -q https://test-1252517595.cos.ap-guangzhou.myqcloud.com/media/boost.tar.gz
+        - tar -xzvf boost.tar.gz | awk "(NR%200)==0{print;}"
         # set up boost
         - export INSTALL_PREFIX=/opt/ros/arm
         - sudo mkdir -p $INSTALL_PREFIX/include
         - sudo mkdir -p $INSTALL_PREFIX/lib
         - sudo cp -rf boost_libs/armeabi-v7a/include/boost-1_68/boost $INSTALL_PREFIX/include/
-        - sudo cp boost_libs/armeabi-v7a/lib/*.a $INSTALL_PREFIX/lib
+        - sudo cp boost_libs/armeabi-v7a/lib/*.a $INSTALL_PREFIX/lib/
         # create workspaces
         - mkdir -p arm/src
         - cd arm/src
@@ -134,9 +131,9 @@ matrix:
         - git clone https://github.com/BluewhaleRobot/roscpp_core --depth=1
         - git clone https://github.com/ros/std_msgs --depth=1
         # compile ros libs
-        - sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python-catkin-tools > /dev/null
+        - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python-catkin-tools > /dev/null
         - cd ..
-        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
         - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
@@ -160,12 +157,139 @@ matrix:
         - mkdir -p libs/armeabi-v7a
         - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/armeabi-v7a/
         - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/armeabi-v7a/
-        - tar -czvf javagalileo-android-${TRAVIS_TAG} libs/
+        ##########################################
+        # build arm64
+        - export INSTALL_PREFIX=/opt/ros/arm64
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/arm64-v8a/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/arm64-v8a/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p arm64/src
+        - cd arm64
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/arm64
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/arm64/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/arm64/
+        ##########################################
+        # build x86
+        - export INSTALL_PREFIX=/opt/ros/x86
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/x86/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/x86/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p x86/src
+        - cd x86
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/x86
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/x86/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/x86/
+        ##########################################
+        # build x86_64
+        - export INSTALL_PREFIX=/opt/ros/x86_64
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/x86_64/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/x86_64/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p x86_64/src
+        - cd x86_64
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/x86_64
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/x86_64/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/x86_64/
+        # make package 
+        - cd javagalileo/javagalileo
+        - mvn package | awk "(NR%50)==0{print;}"
+        - cd ..
+        - mkdir -p deploy/javagalileo
+        - cd deploy
+        - cp ../javagalileo/target/javagalileo*.jar ./javagalileo/
+        - cp -rf ../../libs ./javagalileo/
+        # compress libs
+        - tar -czvf javagalileo-android-${TRAVIS_TAG}.tar.gz javagalileo
+        - mv javagalileo-android-${TRAVIS_TAG}.tar.gz ../
 
       deploy:
         provider: releases
         api_key: "$token"
-        file: "javagalileo-android-${TRAVIS_TAG}.zip"
+        file: "javagalileo-android-${TRAVIS_TAG}.tar.gz"
         skip_cleanup: true
         on:
           branch: master
