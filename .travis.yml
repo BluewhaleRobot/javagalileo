@@ -87,14 +87,14 @@ matrix:
       script:
         - source /opt/ros/kinetic/setup.bash
         - export LIBRARY_PATH=/opt/ros/kinetic/lib/
-        # # install cmake
-        # - cd ..
-        # - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
-        # - tar -xzf cmake-3.14.0-rc4.tar.gz > /dev/null
-        # - cd cmake-3.14.0-rc4/
-        # - travis_wait 30 env CC=$(which clang) CXX=$(which clang++) ./bootstrap --prefix=/usr --parallel=4 | awk "(NR%200)==0{print;}"
-        # - make | awk "(NR%200)==0{print;}"
-        # - sudo make install > /dev/null
+        # install cmake
+        - cd ..
+        - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
+        - tar -xzf cmake-3.14.0-rc4.tar.gz > /dev/null
+        - cd cmake-3.14.0-rc4/
+        - travis_wait 30 env CC=$(which clang) CXX=$(which clang++) ./bootstrap --prefix=$(dirname $(which cmake)) --parallel=4 | awk "(NR%200)==0{print;}"
+        - make | awk "(NR%200)==0{print;}"
+        - sudo make install > /dev/null
         # install ndk
         - cd ..
         - wget -q https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip
