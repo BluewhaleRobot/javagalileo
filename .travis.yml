@@ -24,6 +24,7 @@ matrix:
         api_key: "$token"
         file: "javagalileo-win-${TRAVIS_TAG}.jar"
         skip_cleanup: true
+        overwrite: true
         on:
           branch: master
           tags: true
@@ -62,6 +63,7 @@ matrix:
         api_key: "$token"
         file: "javagalileo-linux-${TRAVIS_TAG}.jar"
         skip_cleanup: true
+        overwrite: true
         on:
           branch: master
           tags: true
@@ -294,6 +296,7 @@ matrix:
         api_key: "$token"
         file: "javagalileo-android-${TRAVIS_TAG}.tar.gz"
         skip_cleanup: true
+        overwrite: true
         on:
           branch: master
           tags: true
