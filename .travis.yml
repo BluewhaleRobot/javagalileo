@@ -195,9 +195,9 @@ matrix:
         - make -j
         # save libs
         - cd ../../../../
-        - mkdir -p libs/arm64
-        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/arm64/
-        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/arm64/
+        - mkdir -p libs/arm64-v8a
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/arm64-v8a/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/arm64-v8a/
         ##########################################
         # build x86
         - export INSTALL_PREFIX=/opt/ros/x86
@@ -288,7 +288,6 @@ matrix:
         - tar -czvf javagalileo-android-${TRAVIS_TAG}.tar.gz javagalileo
         - mv javagalileo-android-${TRAVIS_TAG}.tar.gz ../
         - cd ..
-        - ls
 
       deploy:
         provider: releases
