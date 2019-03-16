@@ -287,6 +287,8 @@ matrix:
         # compress libs
         - tar -czvf javagalileo-android-${TRAVIS_TAG}.tar.gz javagalileo
         - mv javagalileo-android-${TRAVIS_TAG}.tar.gz ../
+        - cd ..
+        - ls
 
       deploy:
         provider: releases
