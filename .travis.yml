@@ -152,7 +152,18 @@ matrix:
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
         - cd ..
         # install galileo sdk
-        - cd javagalileo/GalileoSDK/GalileoSDK
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../iot
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../GalileoSDK
+        - rm -rf build
         - mkdir build
         - cd build
         - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
@@ -189,7 +200,17 @@ matrix:
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
         - cd ..
         # install galileo sdk
-        - cd javagalileo/GalileoSDK/GalileoSDK
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../iot
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
@@ -228,7 +249,17 @@ matrix:
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
         - cd ..
         # install galileo sdk
-        - cd javagalileo/GalileoSDK/GalileoSDK
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../iot
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - make
+        - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
@@ -270,12 +301,12 @@ matrix:
         - cd javagalileo/GalileoSDK/IotWrapper
         - mkdir build
         - cd build
-        - cmake ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX ..
         - make
         - cd ../../iot
         - mkdir build
         - cd build
-        - cmake ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
