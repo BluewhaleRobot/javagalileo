@@ -3,3 +3,4 @@ javagalileo/libs
 *.class
 resources/
 build
+.vscode/ipch/

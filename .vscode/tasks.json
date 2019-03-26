@@ -6,13 +6,14 @@
         {
             "label": "verify",
             "type": "shell",
-            "command": "mvn -B verify",
-            "group": "build"
+            "command": "cd javagalileo;mvn -B verify",
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "test",
             "type": "shell",
-            "command": "mvn -B test",
+            "command": "cd javagalileo;mvn -B test",
             "group": "test"
         },
         {
@@ -22,14 +23,18 @@
             "windows": {
                 "command": ".\\scripts\\build.ps1"
             },
-            "group": "build"
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "package",
             "type": "shell",
-            "command": "cd javagalileo;mvn package",
-            "group": "build"
+            "command": "./scripts/package.sh",
+            "windows": {
+                "command": ".\\scripts\\package.ps1"
+            },
+            "group": "build",
+            "problemMatcher": []
         }
-
     ]
 }

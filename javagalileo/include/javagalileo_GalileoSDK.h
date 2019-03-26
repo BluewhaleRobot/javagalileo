@@ -41,6 +41,14 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
 
 /*
  * Class:     javagalileo_GalileoSDK
+ * Method:    ConnectIOT
+ * Signature: (JLjava/lang/String;ILjava/lang/String;Ljavagalileo/listeners/OnConnectEventListener;Ljavagalileo/listeners/OnDisconnectEventListener;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ */
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT
+  (JNIEnv *, jobject, jlong, jstring, jint, jstring, jobject, jobject);
+
+/*
+ * Class:     javagalileo_GalileoSDK
  * Method:    GetServersOnline
  * Signature: (J)[Ljavagalileo/models/ServerInfo;
  */
@@ -310,6 +318,22 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback
  */
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_WaitForGoal
   (JNIEnv *, jobject, jlong, jint);
+
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    SendAudio
+ * Signature: (JLjava/lang/String;)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ */
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SendAudio
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    CheckServerOnline
+ * Signature: (JLjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_javagalileo_GalileoSDK_CheckServerOnline
+  (JNIEnv *, jobject, jlong, jstring);
 
 /*
  * Class:     javagalileo_GalileoSDK

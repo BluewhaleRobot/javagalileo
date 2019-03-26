@@ -103,7 +103,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\GalileoSDK\include;$(SolutionDir)..\GalileoSDK\GalileoSDK\include;$(ProjectDir)..\..\javagalileo\include;C:\Program Files\Java\jdk1.8.0_172\include\win32;C:\Program Files\Java\jdk1.8.0_172\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\GalileoSDK\IotWrapper;$(SolutionDir)..\GalileoSDK\iot;$(SolutionDir)..\GalileoSDK\include;$(SolutionDir)..\GalileoSDK\GalileoSDK\include;$(ProjectDir)..\..\javagalileo\include;C:\Program Files\Java\jdk1.8.0_172\include\win32;C:\Program Files\Java\jdk1.8.0_172\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\Java\jdk1.8.0_172\lib;$(SolutionDir)..\javagalileo\libs\win-x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,7 +114,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\GalileoSDK\include;$(SolutionDir)..\GalileoSDK\GalileoSDK\include;$(ProjectDir)..\..\javagalileo\include;$(JAVA_HOME)\include\win32;$(JAVA_HOME)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\GalileoSDK\IotWrapper;$(SolutionDir)..\GalileoSDK\iot;$(SolutionDir)..\GalileoSDK\include;$(SolutionDir)..\GalileoSDK\GalileoSDK\include;$(ProjectDir)..\..\javagalileo\include;$(JAVA_HOME)\include\win32;$(JAVA_HOME)\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\Java\jdk1.8.0_172\lib;$(SolutionDir)..\javagalileo\libs\win-x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">

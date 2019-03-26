@@ -47,8 +47,17 @@ matrix:
       script:
         - source /opt/ros/kinetic/setup.bash
         - export LIBRARY_PATH=/opt/ros/kinetic/lib/
-        - cd GalileoSDK
-        - cd GalileoSDK
+        - cd GalileoSDK/IotWrapper
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make
+        - cd ../../iot
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make
+        - cd ../../GalileoSDK
         - mkdir build
         - cd build
         - cmake ..
@@ -258,7 +267,17 @@ matrix:
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
         - cd ..
         # install galileo sdk
-        - cd javagalileo/GalileoSDK/GalileoSDK
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make
+        - cd ../../iot
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make
+        - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build

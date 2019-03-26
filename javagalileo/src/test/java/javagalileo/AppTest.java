@@ -436,7 +436,7 @@ public class AppTest {
         sdk.SetGoal(0);
         // wait for goal status
         status = sdk.GetCurrentStatus();
-        while(status.getTargetStatus() != 1){
+        while (status.getTargetStatus() != 1) {
             System.out.println("Wait for goal start");
             status = sdk.GetCurrentStatus();
             try {
@@ -455,7 +455,7 @@ public class AppTest {
         }
         sdk.PauseGoal();
         status = sdk.GetCurrentStatus();
-        while(status.getTargetStatus() != 2){
+        while (status.getTargetStatus() != 2) {
             System.out.println("Wait for goal pause");
             status = sdk.GetCurrentStatus();
             try {
@@ -515,7 +515,7 @@ public class AppTest {
 
         // wait goal complete
         status = sdk.GetCurrentStatus();
-        while(status.getTargetStatus() != 1){
+        while (status.getTargetStatus() != 1) {
             System.out.println("Wait goal start");
             status = sdk.GetCurrentStatus();
             try {
@@ -525,7 +525,7 @@ public class AppTest {
             }
         }
         System.out.println("Goal started");
-        while(status.getTargetStatus() != 0 || status.getTargetNumID() != 0){
+        while (status.getTargetStatus() != 0 || status.getTargetNumID() != 0) {
             System.out.println("Wait goal complete");
             status = sdk.GetCurrentStatus();
             try {
@@ -549,7 +549,7 @@ public class AppTest {
         sdk.SetGoal(1);
         // wait goal complete
         status = sdk.GetCurrentStatus();
-        while(status.getTargetStatus() !=1){
+        while (status.getTargetStatus() != 1) {
             System.out.println("Wait for goal start");
             status = sdk.GetCurrentStatus();
             try {
@@ -559,7 +559,7 @@ public class AppTest {
             }
         }
         System.out.println("Goal started");
-        while(status.getTargetStatus() != 0 || status.getTargetNumID() != 1){
+        while (status.getTargetStatus() != 0 || status.getTargetNumID() != 1) {
             System.out.println("Wait for goal complete");
             status = sdk.GetCurrentStatus();
             try {
@@ -574,11 +574,10 @@ public class AppTest {
         float pos1_y = status.getCurrentPoseY();
         // move to point between #0 and #1
         System.out.println("Start move to " + (pos0_x + pos1_x) / 2 + " " + (pos0_y + pos1_y) / 2);
-        int goalNum = sdk.MoveTo((pos0_x + pos1_x) / 2,
-                         (pos0_y + pos1_y) / 2);
+        int goalNum = sdk.MoveTo((pos0_x + pos1_x) / 2, (pos0_y + pos1_y) / 2);
         // wait goal complete
         status = sdk.GetCurrentStatus();
-        while(status.getTargetStatus() != 1){
+        while (status.getTargetStatus() != 1) {
             System.out.println("Wait for goal start");
             status = sdk.GetCurrentStatus();
             try {
@@ -588,7 +587,7 @@ public class AppTest {
             }
         }
         System.out.println("Goal started");
-        while(status.getTargetStatus() !=0 || status.getTargetNumID() != goalNum){
+        while (status.getTargetStatus() != 0 || status.getTargetNumID() != goalNum) {
             System.out.println("Wait for goal reached");
             status = sdk.GetCurrentStatus();
             try {
@@ -599,6 +598,26 @@ public class AppTest {
         }
         System.out.println("Move to " + (pos0_x + pos1_x) / 2 + " " + (pos0_y + pos1_y) / 2 + " complete");
         System.out.println("All complete");
+        sdk.Release();
+    }
+
+    @Test
+    public void testAudioIOT() {
+        GalileoSDK sdk = new GalileoSDK();
+        if (sdk.ConnectIOT("71329A5B0F2D68364BB7B44F3F125531E4C7F5BC3BCE2694DFE39B505FF9C730A614FF2790C1", 10000,
+                "xiaoqiang", null, null) != GALILEO_RETURN_CODE.OK) {
+            System.out.println("Connect to server failed");
+        }
+        int count = 0;
+        while (count < 5) {
+            sdk.SendAudio("测试");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            count ++;
+        }
         sdk.Release();
     }
 }
