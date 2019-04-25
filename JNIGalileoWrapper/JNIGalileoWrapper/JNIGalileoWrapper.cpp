@@ -61,7 +61,7 @@ JavaVM* jvm = 0;
 
 jobject ConvertGalileoReturnCode(JNIEnv* env, GalileoSDK::GALILEO_RETURN_CODE res) {
     std::string res_str = GalileoCodeToString(res);
-    jclass clSTATUS = env->FindClass("Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
+    jclass clSTATUS = env->FindClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
     jfieldID fidONE = env->GetStaticFieldID(clSTATUS, res_str.data(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
     jobject STATUS = env->GetStaticObjectField(clSTATUS, fidONE);
     return STATUS;
