@@ -45,17 +45,6 @@ matrix:
         - sudo apt-fast update -qq
         - sudo apt-get install -y --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs
       script:
-        - cmake --version
-        # install cmake
-        - cd ..
-        - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
-        - tar -xzf cmake-3.14.0-rc4.tar.gz > /dev/null
-        - cd cmake-3.14.0-rc4/
-        - travis_wait 30 env CC=$(which clang) CXX=$(which clang++) ./bootstrap --prefix=/usr --parallel=4 | awk "(NR%200)==0{print;}"
-        - make | awk "(NR%200)==0{print;}"
-        - sudo make install > /dev/null
-        - which cmake 
-        - cmake --version
         - cd ..
         # install ros packages
         - mkdir -p amd64/src
