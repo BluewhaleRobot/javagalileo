@@ -45,6 +45,7 @@ matrix:
         - sudo apt-fast update -qq
         - sudo apt-get install -y --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs
       script:
+        - cmake --version
         # install cmake
         - cd ..
         - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
@@ -81,16 +82,19 @@ matrix:
         - cd ../javagalileo
         # build galileo sdk
         - cd GalileoSDK/IotWrapper
+        - rm -rf build
         - mkdir build
         - cd build
         - cmake ..
         - make
         - cd ../../iot
+        - rm -rf build
         - mkdir build
         - cd build
         - cmake ..
         - make
         - cd ../../GalileoSDK
+        - rm -rf build
         - mkdir build
         - cd build
         - cmake ..
