@@ -554,7 +554,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback
     jmethodID OnUpdateID = NULL;
     if (!env->IsSameObject(onStatusUpdate, NULL)) {
         jclass OnUpdateClass = env->GetObjectClass(onStatusUpdate);
-        OnUpdateID = env->GetMethodID(OnUpdateClass, "OnStatusUpdateEvent",
+        OnUpdateID = env->GetMethodID(OnUpdateClass, "OnStatusUpdated",
             "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljavagalileo/models/GalileoStatus;)V");
     }
 
