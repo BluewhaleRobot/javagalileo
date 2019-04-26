@@ -9,5 +9,8 @@
             "name": "config-89fe7b"
         }
     ],
-    "java.test.defaultConfig": "config-89fe7b"
+    "java.test.defaultConfig": "config-89fe7b",
+    "files.associations": {
+        "ostream": "cpp"
+    }
 }

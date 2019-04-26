@@ -41,7 +41,15 @@ add_library(JNIGalileoWrapper
    ${PROJECT_SOURCE_DIR}/JNIGalileoWrapper.cpp
 )
 
+if(ANDROID)
+target_link_libraries(JNIGalileoWrapper
+   ${JNI_LIBRARIES}
+   ${GalileoSDK_LIBRARIES}
+   log
+)
+else()
 target_link_libraries(JNIGalileoWrapper
    ${JNI_LIBRARIES}
    ${GalileoSDK_LIBRARIES}
 )
+endif()

@@ -57,13 +57,53 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_ReleaseInstance
 
 jobject OnConnectCB;
 jobject OnDisconnectCB;
+
 JavaVM* jvm = 0;
+JavaVM* gJvm = nullptr;
+static jobject gClassLoader;
+static jmethodID gFindClassMethod;
+
+JNIEnv* getEnv() {
+    JNIEnv *env;
+    int status = gJvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+    if(status < 0) {    
+        status = gJvm->AttachCurrentThread(&env, NULL);
+        if(status < 0) {        
+            return nullptr;
+        }
+    }
+    return env;
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
+    gJvm = pjvm;  // cache the JavaVM pointer
+    auto env = getEnv();
+    //replace with one of your classes in the line below
+    auto randomClass = env->FindClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
+    jclass classClass = env->GetObjectClass(randomClass);
+    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
+    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
+                                             "()Ljava/lang/ClassLoader;");
+    gClassLoader = env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
+    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
+                                    "(Ljava/lang/String;)Ljava/lang/Class;");
+
+    return JNI_VERSION_1_6;
+}
+
+jclass findClass(const char* name) {
+    return static_cast<jclass>(getEnv()->CallObjectMethod(gClassLoader, gFindClassMethod, getEnv()->NewStringUTF(name)));
+}
 
 jobject ConvertGalileoReturnCode(JNIEnv* env, GalileoSDK::GALILEO_RETURN_CODE res) {
     std::string res_str = GalileoCodeToString(res);
-    jclass clSTATUS = env->FindClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
-    jfieldID fidONE = env->GetStaticFieldID(clSTATUS, res_str.data(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
+    LOGI("galileo_sdk_logcat", "jni %s", res_str.c_str());
+    jclass clSTATUS = findClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
+    LOGI("galileo_sdk_logcat", "jni %s", "OK0");
+    jfieldID fidONE = env->GetStaticFieldID(clSTATUS, res_str.c_str(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
+    LOGI("galileo_sdk_logcat", "jni %s", "OK1");
     jobject STATUS = env->GetStaticObjectField(clSTATUS, fidONE);
+    LOGI("galileo_sdk_logcat", "jni %s", "OK2");
     return STATUS;
 }
 
@@ -111,7 +151,9 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
             jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
                 "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
             if (NULL != OnConnectID) {
+                LOGI("galileo_sdk_logcat", "jni %s", "OnConnectID OK1");
                 jobject statusJ = ConvertGalileoReturnCode(menv, status);
+                LOGI("galileo_sdk_logcat", "jni %s", "OnConnectID OK2");
                 jstring idJ = menv->NewStringUTF(id.data());
                 menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
             }
@@ -224,7 +266,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT
 }
 
 jobject ConvertServerInfo(JNIEnv *env, GalileoSDK::ServerInfo info) {
-    jclass serverInfoClass = env->FindClass("javagalileo/models/ServerInfo");
+    jclass serverInfoClass = findClass("javagalileo/models/ServerInfo");
     jmethodID serverInfoInit = env->GetMethodID(serverInfoClass, "<init>", "()V");
     jobject serverInfoJ = env->NewObject(serverInfoClass, serverInfoInit);
     // set attributes
@@ -233,13 +275,13 @@ jobject ConvertServerInfo(JNIEnv *env, GalileoSDK::ServerInfo info) {
     env->SetObjectField(serverInfoJ, id_field, id_j);
 
     jfieldID port_field = env->GetFieldID(serverInfoClass, "port", "Ljava/lang/Integer;");
-    jclass int_class = env->FindClass("java/lang/Integer");
+    jclass int_class = findClass("java/lang/Integer");
     jmethodID int_init = env->GetMethodID(int_class, "<init>", "(I)V");
     jobject port_j = env->NewObject(int_class, int_init, info.getPort());
     env->SetObjectField(serverInfoJ, port_field, port_j);
 
     jfieldID timestamp_field = env->GetFieldID(serverInfoClass, "timestamp", "Ljava/lang/Long;");
-    jclass long_class = env->FindClass("java/lang/Long");
+    jclass long_class = findClass("java/lang/Long");
     jmethodID long_init = env->GetMethodID(long_class, "<init>", "(J)V");
     jobject timestamp_j = env->NewObject(long_class, long_init, info.getTimestamp());
     env->SetObjectField(serverInfoJ, timestamp_field, timestamp_j);
@@ -262,7 +304,7 @@ JNIEXPORT jobjectArray JNICALL Java_javagalileo_GalileoSDK_GetServersOnline
 (JNIEnv *env, jobject, jlong instance) {
     GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
     std::vector<GalileoSDK::ServerInfo> servers = sdk->GetServersOnline();
-    jclass serverInfoClass = env->FindClass("javagalileo/models/ServerInfo");
+    jclass serverInfoClass = findClass("javagalileo/models/ServerInfo");
     jobjectArray serversJ = env->NewObjectArray(servers.size(), serverInfoClass, NULL);
     for (int i = 0; i < servers.size(); i++) {
         env->SetObjectArrayElement(serversJ, i, ConvertServerInfo(env, servers.at(i)));
@@ -481,7 +523,7 @@ JNIEXPORT jint JNICALL Java_javagalileo_GalileoSDK_GetGoalNum
 
 
 jobject ConvertGalileoStatus(JNIEnv *env, galileo_serial_server::GalileoStatus status) {
-    jclass galileoStatus_class = env->FindClass("javagalileo/models/GalileoStatus");
+    jclass galileoStatus_class = findClass("javagalileo/models/GalileoStatus");
     jmethodID galileoStatus_init = env->GetMethodID(galileoStatus_class, "<init>", "()V");
     jobject galileoStatusJ = env->NewObject(galileoStatus_class, galileoStatus_init);
     jmethodID setTimestamp_method = env->GetMethodID(galileoStatus_class, "setTimestamp", "(J)V");
