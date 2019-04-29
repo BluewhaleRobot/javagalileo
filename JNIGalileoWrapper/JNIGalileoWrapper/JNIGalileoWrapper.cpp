@@ -97,13 +97,9 @@ jclass findClass(const char* name) {
 
 jobject ConvertGalileoReturnCode(JNIEnv* env, GalileoSDK::GALILEO_RETURN_CODE res) {
     std::string res_str = GalileoCodeToString(res);
-    LOGI("galileo_sdk_logcat", "jni %s", res_str.c_str());
     jclass clSTATUS = findClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
-    LOGI("galileo_sdk_logcat", "jni %s", "OK0");
     jfieldID fidONE = env->GetStaticFieldID(clSTATUS, res_str.c_str(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
-    LOGI("galileo_sdk_logcat", "jni %s", "OK1");
     jobject STATUS = env->GetStaticObjectField(clSTATUS, fidONE);
-    LOGI("galileo_sdk_logcat", "jni %s", "OK2");
     return STATUS;
 }
 
@@ -151,9 +147,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect
             jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
                 "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
             if (NULL != OnConnectID) {
-                LOGI("galileo_sdk_logcat", "jni %s", "OnConnectID OK1");
                 jobject statusJ = ConvertGalileoReturnCode(menv, status);
-                LOGI("galileo_sdk_logcat", "jni %s", "OnConnectID OK2");
                 jstring idJ = menv->NewStringUTF(id.data());
                 menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
             }
