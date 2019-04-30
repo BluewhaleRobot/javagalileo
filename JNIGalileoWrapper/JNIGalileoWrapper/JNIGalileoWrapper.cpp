@@ -60,8 +60,11 @@ jobject OnDisconnectCB;
 
 JavaVM* jvm = 0;
 JavaVM* gJvm = nullptr;
-static jobject gClassLoader;
-static jmethodID gFindClassMethod;
+static jclass gInteger;
+static jclass gLong;
+static jclass gServerInfo;
+static jclass gGalileoStatus;
+static jclass gGALILEO_RETURN_CODE;
 
 JNIEnv* getEnv() {
     JNIEnv *env;
@@ -78,28 +81,18 @@ JNIEnv* getEnv() {
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *pjvm, void *reserved) {
     gJvm = pjvm;  // cache the JavaVM pointer
     auto env = getEnv();
-    //replace with one of your classes in the line below
-    auto randomClass = env->FindClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
-    jclass classClass = env->GetObjectClass(randomClass);
-    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
-    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
-                                             "()Ljava/lang/ClassLoader;");
-    gClassLoader = env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
-    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
-                                    "(Ljava/lang/String;)Ljava/lang/Class;");
-
+    gInteger = (jclass)env->NewGlobalRef(env->FindClass("java/lang/Integer"));
+    gLong = (jclass)env->NewGlobalRef(env->FindClass("java/lang/Long"));
+    gServerInfo = (jclass)env->NewGlobalRef(env->FindClass("javagalileo/models/ServerInfo"));
+    gGalileoStatus = (jclass)env->NewGlobalRef(env->FindClass("javagalileo/models/GalileoStatus"));
+    gGALILEO_RETURN_CODE = (jclass)env->NewGlobalRef(env->FindClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE"));
     return JNI_VERSION_1_6;
-}
-
-jclass findClass(const char* name) {
-    return static_cast<jclass>(getEnv()->CallObjectMethod(gClassLoader, gFindClassMethod, getEnv()->NewStringUTF(name)));
 }
 
 jobject ConvertGalileoReturnCode(JNIEnv* env, GalileoSDK::GALILEO_RETURN_CODE res) {
     std::string res_str = GalileoCodeToString(res);
-    jclass clSTATUS = findClass("javagalileo/models/ServerInfo$GALILEO_RETURN_CODE");
-    jfieldID fidONE = env->GetStaticFieldID(clSTATUS, res_str.c_str(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
-    jobject STATUS = env->GetStaticObjectField(clSTATUS, fidONE);
+    jfieldID fidONE = env->GetStaticFieldID(gGALILEO_RETURN_CODE, res_str.c_str(), "Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;");
+    jobject STATUS = env->GetStaticObjectField(gGALILEO_RETURN_CODE, fidONE);
     return STATUS;
 }
 
@@ -260,35 +253,32 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT
 }
 
 jobject ConvertServerInfo(JNIEnv *env, GalileoSDK::ServerInfo info) {
-    jclass serverInfoClass = findClass("javagalileo/models/ServerInfo");
-    jmethodID serverInfoInit = env->GetMethodID(serverInfoClass, "<init>", "()V");
-    jobject serverInfoJ = env->NewObject(serverInfoClass, serverInfoInit);
+    jmethodID serverInfoInit = env->GetMethodID(gServerInfo, "<init>", "()V");
+    jobject serverInfoJ = env->NewObject(gServerInfo, serverInfoInit);
     // set attributes
-    jfieldID id_field = env->GetFieldID(serverInfoClass, "ID", "Ljava/lang/String;");
+    jfieldID id_field = env->GetFieldID(gServerInfo, "ID", "Ljava/lang/String;");
     jstring id_j = env->NewStringUTF(info.getID().data());
     env->SetObjectField(serverInfoJ, id_field, id_j);
 
-    jfieldID port_field = env->GetFieldID(serverInfoClass, "port", "Ljava/lang/Integer;");
-    jclass int_class = findClass("java/lang/Integer");
-    jmethodID int_init = env->GetMethodID(int_class, "<init>", "(I)V");
-    jobject port_j = env->NewObject(int_class, int_init, info.getPort());
+    jfieldID port_field = env->GetFieldID(gServerInfo, "port", "Ljava/lang/Integer;");
+    jmethodID int_init = env->GetMethodID(gInteger, "<init>", "(I)V");
+    jobject port_j = env->NewObject(gInteger, int_init, info.getPort());
     env->SetObjectField(serverInfoJ, port_field, port_j);
 
-    jfieldID timestamp_field = env->GetFieldID(serverInfoClass, "timestamp", "Ljava/lang/Long;");
-    jclass long_class = findClass("java/lang/Long");
-    jmethodID long_init = env->GetMethodID(long_class, "<init>", "(J)V");
-    jobject timestamp_j = env->NewObject(long_class, long_init, info.getTimestamp());
+    jfieldID timestamp_field = env->GetFieldID(gServerInfo, "timestamp", "Ljava/lang/Long;");
+    jmethodID long_init = env->GetMethodID(gLong, "<init>", "(J)V");
+    jobject timestamp_j = env->NewObject(gLong, long_init, info.getTimestamp());
     env->SetObjectField(serverInfoJ, timestamp_field, timestamp_j);
 
-    jfieldID ip_field = env->GetFieldID(serverInfoClass, "ip", "Ljava/lang/String;");
+    jfieldID ip_field = env->GetFieldID(gServerInfo, "ip", "Ljava/lang/String;");
     jstring ip_j = env->NewStringUTF(info.getIP().data());
     env->SetObjectField(serverInfoJ, ip_field, ip_j);
 
-    jfieldID password_field = env->GetFieldID(serverInfoClass, "password", "Ljava/lang/String;");
+    jfieldID password_field = env->GetFieldID(gServerInfo, "password", "Ljava/lang/String;");
     jstring password_j = env->NewStringUTF(info.getPassword().data());
     env->SetObjectField(serverInfoJ, password_field, password_j);
 
-    jfieldID mac_field = env->GetFieldID(serverInfoClass, "mac", "Ljava/lang/String;");
+    jfieldID mac_field = env->GetFieldID(gServerInfo, "mac", "Ljava/lang/String;");
     jstring mac_j = env->NewStringUTF(info.getMac().data());
     env->SetObjectField(serverInfoJ, mac_field, mac_j);
     return serverInfoJ;
@@ -298,8 +288,7 @@ JNIEXPORT jobjectArray JNICALL Java_javagalileo_GalileoSDK_GetServersOnline
 (JNIEnv *env, jobject, jlong instance) {
     GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
     std::vector<GalileoSDK::ServerInfo> servers = sdk->GetServersOnline();
-    jclass serverInfoClass = findClass("javagalileo/models/ServerInfo");
-    jobjectArray serversJ = env->NewObjectArray(servers.size(), serverInfoClass, NULL);
+    jobjectArray serversJ = env->NewObjectArray(servers.size(), gServerInfo, NULL);
     for (int i = 0; i < servers.size(); i++) {
         env->SetObjectArrayElement(serversJ, i, ConvertServerInfo(env, servers.at(i)));
     }
@@ -517,50 +506,49 @@ JNIEXPORT jint JNICALL Java_javagalileo_GalileoSDK_GetGoalNum
 
 
 jobject ConvertGalileoStatus(JNIEnv *env, galileo_serial_server::GalileoStatus status) {
-    jclass galileoStatus_class = findClass("javagalileo/models/GalileoStatus");
-    jmethodID galileoStatus_init = env->GetMethodID(galileoStatus_class, "<init>", "()V");
-    jobject galileoStatusJ = env->NewObject(galileoStatus_class, galileoStatus_init);
-    jmethodID setTimestamp_method = env->GetMethodID(galileoStatus_class, "setTimestamp", "(J)V");
+    jmethodID galileoStatus_init = env->GetMethodID(gGalileoStatus, "<init>", "()V");
+    jobject galileoStatusJ = env->NewObject(gGalileoStatus, galileoStatus_init);
+    jmethodID setTimestamp_method = env->GetMethodID(gGalileoStatus, "setTimestamp", "(J)V");
     env->CallVoidMethod(galileoStatusJ, setTimestamp_method, status.header.stamp.toNSec() / 1000 / 1000);
-    jmethodID setAngleGoalStatus_method = env->GetMethodID(galileoStatus_class, "setAngleGoalStatus", "(I)V");
+    jmethodID setAngleGoalStatus_method = env->GetMethodID(gGalileoStatus, "setAngleGoalStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setAngleGoalStatus_method, status.angleGoalStatus);
-    jmethodID setBusyStatus_method = env->GetMethodID(galileoStatus_class, "setBusyStatus", "(I)V");
+    jmethodID setBusyStatus_method = env->GetMethodID(gGalileoStatus, "setBusyStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setBusyStatus_method, status.busyStatus);
-    jmethodID setChargeStatus_method = env->GetMethodID(galileoStatus_class, "setChargeStatus", "(I)V");
+    jmethodID setChargeStatus_method = env->GetMethodID(gGalileoStatus, "setChargeStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setChargeStatus_method, status.chargeStatus);
-    jmethodID setControlSpeedTheta_method = env->GetMethodID(galileoStatus_class, "setControlSpeedTheta", "(F)V");
+    jmethodID setControlSpeedTheta_method = env->GetMethodID(gGalileoStatus, "setControlSpeedTheta", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setControlSpeedTheta_method, status.controlSpeedTheta);
-    jmethodID setControlSpeedX_method = env->GetMethodID(galileoStatus_class, "setControlSpeedX", "(F)V");
-    env->CallIntMethod(galileoStatusJ, setControlSpeedX_method, status.controlSpeedX);
-    jmethodID setGbaStatus_method = env->GetMethodID(galileoStatus_class, "setGbaStatus", "(I)V");
+    jmethodID setControlSpeedX_method = env->GetMethodID(gGalileoStatus, "setControlSpeedX", "(F)V");
+    env->CallVoidMethod(galileoStatusJ, setControlSpeedX_method, status.controlSpeedX);
+    jmethodID setGbaStatus_method = env->GetMethodID(gGalileoStatus, "setGbaStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setGbaStatus_method, status.gbaStatus);
-    jmethodID setGcStatus_method = env->GetMethodID(galileoStatus_class, "setGcStatus", "(I)V");
+    jmethodID setGcStatus_method = env->GetMethodID(gGalileoStatus, "setGcStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setGcStatus_method, status.gcStatus);
-    jmethodID setLoopStatus_method = env->GetMethodID(galileoStatus_class, "setLoopStatus", "(I)V");
+    jmethodID setLoopStatus_method = env->GetMethodID(gGalileoStatus, "setLoopStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setLoopStatus_method, status.loopStatus);
-    jmethodID setMapStatus_method = env->GetMethodID(galileoStatus_class, "setMapStatus", "(I)V");
+    jmethodID setMapStatus_method = env->GetMethodID(gGalileoStatus, "setMapStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setMapStatus_method, status.mapStatus);
-    jmethodID setNavStatus_method = env->GetMethodID(galileoStatus_class, "setNavStatus", "(I)V");
-    env->CallIntMethod(galileoStatusJ, setNavStatus_method, status.navStatus);
-    jmethodID setPower_method = env->GetMethodID(galileoStatus_class, "setPower", "(F)V");
+    jmethodID setNavStatus_method = env->GetMethodID(gGalileoStatus, "setNavStatus", "(I)V");
+    env->CallVoidMethod(galileoStatusJ, setNavStatus_method, status.navStatus);
+    jmethodID setPower_method = env->GetMethodID(gGalileoStatus, "setPower", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setPower_method, status.power);
-    jmethodID setTargetDistance_method = env->GetMethodID(galileoStatus_class, "setTargetDistance", "(F)V");
+    jmethodID setTargetDistance_method = env->GetMethodID(gGalileoStatus, "setTargetDistance", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setTargetDistance_method, status.targetDistance);
-    jmethodID setTargetNumID_method = env->GetMethodID(galileoStatus_class, "setTargetNumID", "(I)V");
+    jmethodID setTargetNumID_method = env->GetMethodID(gGalileoStatus, "setTargetNumID", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setTargetNumID_method, status.targetNumID);
-    jmethodID setTargetStatus_method = env->GetMethodID(galileoStatus_class, "setTargetStatus", "(I)V");
+    jmethodID setTargetStatus_method = env->GetMethodID(gGalileoStatus, "setTargetStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setTargetStatus_method, status.targetStatus);
-    jmethodID setVisualStatus_method = env->GetMethodID(galileoStatus_class, "setVisualStatus", "(I)V");
+    jmethodID setVisualStatus_method = env->GetMethodID(gGalileoStatus, "setVisualStatus", "(I)V");
     env->CallVoidMethod(galileoStatusJ, setVisualStatus_method, status.visualStatus);
-    jmethodID setCurrentAngle_method = env->GetMethodID(galileoStatus_class, "setCurrentAngle", "(F)V");
+    jmethodID setCurrentAngle_method = env->GetMethodID(gGalileoStatus, "setCurrentAngle", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setCurrentAngle_method, status.currentAngle);
-    jmethodID setCurrentPoseY_method = env->GetMethodID(galileoStatus_class, "setCurrentPoseY", "(F)V");
+    jmethodID setCurrentPoseY_method = env->GetMethodID(gGalileoStatus, "setCurrentPoseY", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setCurrentPoseY_method, status.currentPosY);
-    jmethodID setCurrentPoseX_method = env->GetMethodID(galileoStatus_class, "setCurrentPoseX", "(F)V");
+    jmethodID setCurrentPoseX_method = env->GetMethodID(gGalileoStatus, "setCurrentPoseX", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setCurrentPoseX_method, status.currentPosX);
-    jmethodID setCurrentSpeedTheta_method = env->GetMethodID(galileoStatus_class, "setCurrentSpeedTheta", "(F)V");
+    jmethodID setCurrentSpeedTheta_method = env->GetMethodID(gGalileoStatus, "setCurrentSpeedTheta", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setCurrentSpeedTheta_method, status.currentSpeedTheta);
-    jmethodID setCurrentSpeedX_method = env->GetMethodID(galileoStatus_class, "setCurrentSpeedX", "(F)V");
+    jmethodID setCurrentSpeedX_method = env->GetMethodID(gGalileoStatus, "setCurrentSpeedX", "(F)V");
     env->CallVoidMethod(galileoStatusJ, setCurrentSpeedX_method, status.currentSpeedX);
     return galileoStatusJ;
 }
