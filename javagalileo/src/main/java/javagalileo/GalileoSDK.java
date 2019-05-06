@@ -108,6 +108,8 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     private native GALILEO_RETURN_CODE SendAudio(long instance, String audio);
 
+    private native GALILEO_RETURN_CODE SendRawAudio(long instance, byte[] audioData);
+
     private native boolean CheckServerOnline(long instance, String targetID);
 
     private native void Dispose(long instance);
