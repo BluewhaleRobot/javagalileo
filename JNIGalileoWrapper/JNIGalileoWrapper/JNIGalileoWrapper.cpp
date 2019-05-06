@@ -76,7 +76,11 @@ JNIEnv *getEnv()
     
     if (status < 0)
     {
+#ifdef WIN32
         status = gJvm->AttachCurrentThread((void **)&env, NULL);
+#else
+		status = gJvm->AttachCurrentThread((JNIEnv **)& env, NULL);
+#endif
         if (status < 0)
         {
             return nullptr;
