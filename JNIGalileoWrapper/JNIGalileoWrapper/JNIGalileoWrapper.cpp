@@ -68,7 +68,12 @@ static jclass gGALILEO_RETURN_CODE;
 JNIEnv *getEnv()
 {
     JNIEnv *env;
-    int status = gJvm->GetEnv((void **)&env, JNI_VERSION_1_6);
+#ifdef WIN32
+	int status = gJvm->GetEnv((void **)& env, JNI_VERSION_1_6);
+#else
+	int status = gJvm->GetEnv((JNIEnv **)& env, JNI_VERSION_1_6);
+#endif // WIN32
+    
     if (status < 0)
     {
         status = gJvm->AttachCurrentThread((void **)&env, NULL);
