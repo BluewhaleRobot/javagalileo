@@ -274,6 +274,10 @@ public class GalileoSDK { // Save as HelloJNI.java
         return SendAudio(instance, audio);
     }
 
+    public GALILEO_RETURN_CODE SendRawAudio(byte[] audioData){
+        return SendRawAudio(instance, audioData);
+    }
+
     public boolean CheckServerOnline(String targetID){
         return CheckServerOnline(instance, targetID);
     }
