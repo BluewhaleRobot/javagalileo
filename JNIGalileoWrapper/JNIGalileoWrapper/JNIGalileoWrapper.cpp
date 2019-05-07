@@ -697,7 +697,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SendRawAudio(JNIEnv *env, 
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     env->GetJavaVM(&jvm);
     jbyte *audio_data_j = env->GetByteArrayElements(audioData, NULL);
-    auto res = sdk->SendRawAudio((uint8_t *)audioData, env->GetArrayLength(audioData));
+    auto res = sdk->SendRawAudio((uint8_t *)audio_data_j, env->GetArrayLength(audioData));
     return ConvertGalileoReturnCode(env, res);
 }
 
