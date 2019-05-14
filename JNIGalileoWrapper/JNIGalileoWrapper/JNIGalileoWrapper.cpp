@@ -701,6 +701,14 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SendRawAudio(JNIEnv *env, 
     return ConvertGalileoReturnCode(env, res);
 }
 
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_EnableGreeting
+(JNIEnv *env, jobject, jlong instance, jboolean flag) {
+	GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
+	env->GetJavaVM(&jvm);
+	auto res = sdk->EnableGreeting(flag);
+	return ConvertGalileoReturnCode(env, res);
+}
+
 JNIEXPORT jboolean JNICALL Java_javagalileo_GalileoSDK_CheckServerOnline(JNIEnv *env, jobject, jlong instance, jstring targetID)
 {
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;

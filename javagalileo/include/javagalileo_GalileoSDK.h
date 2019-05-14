@@ -337,6 +337,14 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_SendRawAudio
 
 /*
  * Class:     javagalileo_GalileoSDK
+ * Method:    EnableGreeting
+ * Signature: (JZ)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ */
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_EnableGreeting
+  (JNIEnv *, jobject, jlong, jboolean);
+
+/*
+ * Class:     javagalileo_GalileoSDK
  * Method:    CheckServerOnline
  * Signature: (JLjava/lang/String;)Z
  */

@@ -110,6 +110,8 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     private native GALILEO_RETURN_CODE SendRawAudio(long instance, byte[] audioData);
 
+    private native GALILEO_RETURN_CODE EnableGreeting(long instance, boolean flag);
+
     private native boolean CheckServerOnline(long instance, String targetID);
 
     private native void Dispose(long instance);
@@ -276,6 +278,10 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     public GALILEO_RETURN_CODE SendRawAudio(byte[] audioData){
         return SendRawAudio(instance, audioData);
+    }
+
+    public GALILEO_RETURN_CODE EnableGreeting(boolean flag){
+        return EnableGreeting(instance, flag);
     }
 
     public boolean CheckServerOnline(String targetID){
