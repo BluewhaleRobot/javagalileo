@@ -38,6 +38,12 @@ public class GalileoSDK { // Save as HelloJNI.java
     private native GALILEO_RETURN_CODE ConnectIOT(long instance, String targetID, int timeout, String password,
             OnConnectEventListener onConnect, OnDisconnectEventListener onDisconnect);
 
+    private native void Disconnect(long instance);
+
+    private native GALILEO_RETURN_CODE KeepConnection(long instance, boolean flag, int maxRetry);
+
+    private native GALILEO_RETURN_CODE KeepConnection(long instance, boolean flag);
+
     private native ServerInfo[] GetServersOnline(long instance);
 
     private native ServerInfo GetCurrentServer(long instance);
@@ -138,6 +144,18 @@ public class GalileoSDK { // Save as HelloJNI.java
     public GALILEO_RETURN_CODE ConnectIOT(String targetID, int timeout, String password,
             OnConnectEventListener onConnect, OnDisconnectEventListener onDisconnect) {
         return ConnectIOT(instance, targetID, timeout, password, onConnect, onDisconnect);
+    }
+
+    public void Disconnect(){
+        Disconnect(instance);
+    }
+
+    public GALILEO_RETURN_CODE KeepConnection(boolean flag, int maxRetry){
+        return KeepConnection(flag, maxRetry);
+    }
+
+    public GALILEO_RETURN_CODE KeepConnection(boolean flag){
+        return KeepConnection(flag);
     }
 
     public ServerInfo[] GetServersOnline() {

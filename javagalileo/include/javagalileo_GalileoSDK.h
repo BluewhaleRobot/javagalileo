@@ -49,6 +49,30 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT
 
 /*
  * Class:     javagalileo_GalileoSDK
+ * Method:    Disconnect
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_Disconnect
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    KeepConnection
+ * Signature: (JZI)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ */
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_KeepConnection__JZI
+  (JNIEnv *, jobject, jlong, jboolean, jint);
+
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    KeepConnection
+ * Signature: (JZ)Ljavagalileo/models/ServerInfo/GALILEO_RETURN_CODE;
+ */
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_KeepConnection__JZ
+  (JNIEnv *, jobject, jlong, jboolean);
+
+/*
+ * Class:     javagalileo_GalileoSDK
  * Method:    GetServersOnline
  * Signature: (J)[Ljavagalileo/models/ServerInfo;
  */

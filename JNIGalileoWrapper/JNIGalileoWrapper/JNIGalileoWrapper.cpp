@@ -272,6 +272,26 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     return ConvertGalileoReturnCode(env, res);
 }
 
+void Java_javagalileo_GalileoSDK_Disconnect(JNIEnv *env, jobject, jlong instance)
+{
+    GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
+    sdk->Disconnect();
+}
+
+jobject Java_javagalileo_GalileoSDK_KeepConnection(JNIEnv* env, jobject, jlong instance, jboolean flag, jint maxRetry)
+{
+    GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
+    auto res = sdk->KeepConnection(flag, maxRetry);
+	return ConvertGalileoReturnCode(env, res);
+}
+
+jobject Java_javagalileo_GalileoSDK_KeepConnection(JNIEnv *env, jobject, jlong instance, jboolean flag)
+{
+    GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
+    auto res = sdk->KeepConnection(flag);
+	return ConvertGalileoReturnCode(env, res);
+}
+
 jobject ConvertServerInfo(JNIEnv *env, GalileoSDK::ServerInfo info)
 {
     jmethodID serverInfoInit = env->GetMethodID(gServerInfo, "<init>", "()V");
