@@ -129,7 +129,10 @@ public class GalileoSDK { // Save as HelloJNI.java
     }
 
     public void Release() {
+        if(instance == 0)
+            return;
         ReleaseInstance(instance);
+        instance = 0;
     }
 
     public void Dispose() {
@@ -151,11 +154,11 @@ public class GalileoSDK { // Save as HelloJNI.java
     }
 
     public GALILEO_RETURN_CODE KeepConnection(boolean flag, int maxRetry){
-        return KeepConnection(flag, maxRetry);
+        return KeepConnection(instance, flag, maxRetry);
     }
 
     public GALILEO_RETURN_CODE KeepConnection(boolean flag){
-        return KeepConnection(flag);
+        return KeepConnection(instance, flag);
     }
 
     public ServerInfo[] GetServersOnline() {

@@ -50,7 +50,7 @@ JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance(JNIEnv *, job
 JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_ReleaseInstance(JNIEnv *, jobject, jlong instance)
 {
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
-    sdk->Dispose();
+    sdk->Disconnect();
     delete sdk;
 }
 
@@ -275,17 +275,18 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
 void Java_javagalileo_GalileoSDK_Disconnect(JNIEnv *env, jobject, jlong instance)
 {
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
+    sdk->logger->info("Disconnect");
     sdk->Disconnect();
 }
 
-jobject Java_javagalileo_GalileoSDK_KeepConnection(JNIEnv* env, jobject, jlong instance, jboolean flag, jint maxRetry)
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_KeepConnection__JZI(JNIEnv* env, jobject, jlong instance, jboolean flag, jint maxRetry)
 {
     GalileoSDK::GalileoSDK* sdk = (GalileoSDK::GalileoSDK*)instance;
     auto res = sdk->KeepConnection(flag, maxRetry);
 	return ConvertGalileoReturnCode(env, res);
 }
 
-jobject Java_javagalileo_GalileoSDK_KeepConnection(JNIEnv *env, jobject, jlong instance, jboolean flag)
+JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_KeepConnection__JZ(JNIEnv *env, jobject, jlong instance, jboolean flag)
 {
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     auto res = sdk->KeepConnection(flag);
