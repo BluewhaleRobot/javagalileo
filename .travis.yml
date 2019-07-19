@@ -14,8 +14,8 @@ matrix:
         - export JAVA_HOME="/c/Program Files/Java/$(ls /c/Program\ Files/Java/)"
         - echo $JAVA_HOME
         - echo $PATH
-        - travis_wait 20 choco install maven -y
-        - export PATH=$PATH:"/c/ProgramData/chocolatey/lib/maven/bin"
+        - travis_wait 20 choco install maven -y --version 3.6.1 --force
+        - export PATH=$PATH:"/c/ProgramData/chocolatey/bin"
         - travis_wait 20 powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
         - cp javagalileo/target/javagalileo*.jar javagalileo-win-${TRAVIS_TAG}.jar
 
