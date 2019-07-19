@@ -9,14 +9,14 @@ matrix:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
       script:
         - export PATH=$MSBUILD_PATH:$PATH
-        - travis_wait choco install jdk8 -y
+        - travis_wait 20 choco install jdk8 -y
         - export PATH=$PATH:"/c/Program Files/Java/$(ls /c/Program\ Files/Java/)/bin"
         - export JAVA_HOME="/c/Program Files/Java/$(ls /c/Program\ Files/Java/)"
         - echo $JAVA_HOME
         - echo $PATH
-        - travis_wait choco install maven -y
+        - travis_wait 20 choco install maven -y
         - export PATH=$PATH:"/c/Program Files/apache-maven-3.6.0/bin"
-        - travis_wait powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
+        - travis_wait 20 powershell -ExecutionPolicy Unrestricted ./scripts/package.ps1
         - cp javagalileo/target/javagalileo*.jar javagalileo-win-${TRAVIS_TAG}.jar
 
       deploy:
