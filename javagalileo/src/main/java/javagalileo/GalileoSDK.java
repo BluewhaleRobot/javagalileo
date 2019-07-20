@@ -129,7 +129,10 @@ public class GalileoSDK { // Save as HelloJNI.java
     }
 
     public void Release() {
+        if(instance == 0)
+            return;
         ReleaseInstance(instance);
+        instance = 0;
     }
 
     public void Dispose() {
