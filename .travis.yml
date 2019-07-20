@@ -66,7 +66,7 @@ matrix:
         - git clone https://github.com/ros/std_msgs --depth=1
         - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python-catkin-tools > /dev/null
         - cd ..
-        - ./src/catkin/bin/catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DBoost_USE_STATIC_LIBS=ON -DBoost_LIB_PREFIX=lib -DCATKIN_ENABLE_TESTING=OFF | awk "(NR%50)==0{print;}"
+        - ./src/catkin/bin/catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DBoost_USE_STATIC_LIBS=ON -DBoost_LIB_PREFIX=lib -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - source ./devel/setup.bash
         - cd ../javagalileo
         # build galileo sdk
@@ -74,19 +74,19 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - cmake ..
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../iot
         - rm -rf build
         - mkdir build
         - cd build
-        - cmake ..
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
-        - cmake ..
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         - sudo make install
         - cd ../../../
@@ -171,7 +171,7 @@ matrix:
         # compile ros libs
         - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python-catkin-tools > /dev/null
         - cd ..
-        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
         - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
@@ -181,19 +181,19 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../iot
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         - sudo make install
         - cd ../../../
@@ -202,7 +202,7 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         # save libs
         - cd ../../../../
@@ -222,7 +222,7 @@ matrix:
         - cd arm64
         - cp -rf ../arm/src ./
         # compile ros libs
-        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
         - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
@@ -232,19 +232,19 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release  ..
         - make
         - cd ../../iot
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         - sudo make install
         - cd ../../../
@@ -253,7 +253,7 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         # save libs
         - cd ../../../../
@@ -273,7 +273,7 @@ matrix:
         - cd x86
         - cp -rf ../arm/src ./
         # compile ros libs
-        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
         - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
@@ -283,19 +283,19 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../iot
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         - sudo make install
         - cd ../../../
@@ -304,7 +304,7 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         # save libs
         - cd ../../../../
@@ -324,7 +324,7 @@ matrix:
         - cd x86_64
         - cp -rf ../arm/src ./
         # compile ros libs
-        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF | awk "(NR%50)==0{print;}"
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
         - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
         - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
@@ -334,19 +334,19 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../iot
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make
         - cd ../../GalileoSDK
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         - sudo make install
         - cd ../../../
@@ -355,7 +355,7 @@ matrix:
         - rm -rf build
         - mkdir build
         - cd build
-        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX  ..
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Release ..
         - make -j
         # save libs
         - cd ../../../../
@@ -368,7 +368,7 @@ matrix:
         - cd ..
         - mkdir -p deploy/javagalileo
         - cd deploy
-        - cp ../javagalileo/target/javagalileo*.jar ./javagalileo/
+        - cp ../javagalileo/target/javagalileo*.jar ./javagalileo/javagalileo-${TRAVIS_TAG}.jar
         - cp -rf ../../libs ./javagalileo/
         # compress libs
         - tar -czvf javagalileo-android-${TRAVIS_TAG}.tar.gz javagalileo
