@@ -71,7 +71,7 @@ JNIEnv *getEnv()
 	int status = gJvm->GetEnv((void **)& env, JNI_VERSION_1_6);
     if (status < 0)
     {
-#ifdef WIN32
+#if !defined(__ANDROID__)
         status = gJvm->AttachCurrentThread((void **)&env, NULL);
 #else
 		status = gJvm->AttachCurrentThread((JNIEnv **)& env, NULL);
@@ -142,7 +142,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     {
         OnConnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
@@ -164,7 +164,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
@@ -227,7 +227,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     {
         OnConnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
@@ -249,7 +249,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
@@ -628,7 +628,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback(JNIE
     {
         OnUpdateTmp = [](GalileoSDK::GALILEO_RETURN_CODE code, galileo_serial_server::GalileoStatus status) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
@@ -673,7 +673,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback(JNIEnv
     {
         OnGoalReachedTmp = [](int goalIndex, galileo_serial_server::GalileoStatus status) {
             JNIEnv *menv;
-#ifdef WIN32
+#if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
