@@ -384,3 +384,285 @@ matrix:
         on:
           branch: master
           tags: true
+
+    - name: Android Debug
+      language: java
+      sudo: required
+      dist: xenial
+      jdk:
+        - openjdk8
+      before_install:
+        # install ros
+        - export DEBIAN_FRONTEND="noninteractive"
+        - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+        - sudo apt-get update -y > /dev/null
+        - sudo apt-get install -y aria2 wget > /dev/null
+        - sudo wget -q https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast -O /usr/local/sbin/apt-fast
+        - sudo chmod +x /usr/local/sbin/apt-fast
+        - sudo wget -q https://raw.githubusercontent.com/ilikenwf/apt-fast/master/apt-fast.conf -O /etc/apt-fast.conf
+        - sudo apt-fast update -qq > /dev/null
+        - travis_wait 20 sudo apt-get install -y -qq --allow-unauthenticated ros-kinetic-roscpp libboost-all-dev ros-kinetic-geometry-msgs ros-kinetic-ros-base > /dev/null
+      script:
+        - source /opt/ros/kinetic/setup.bash
+        - export LIBRARY_PATH=/opt/ros/kinetic/lib/
+        # install cmake
+        - cd ..
+        - wget -q https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
+        - tar -xzf cmake-3.14.0-rc4.tar.gz > /dev/null
+        - cd cmake-3.14.0-rc4/
+        - travis_wait 30 env CC=$(which clang) CXX=$(which clang++) ./bootstrap --prefix=/usr --parallel=4 | awk "(NR%200)==0{print;}"
+        - make | awk "(NR%200)==0{print;}"
+        - sudo make install > /dev/null
+        - which cmake 
+        - cmake --version
+        # install ndk
+        - cd ..
+        - wget -q https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip
+        - unzip -qq android-ndk-r18b-linux-x86_64.zip
+        - export NDK_ROOT=$(pwd)/android-ndk-r18b
+        # setup toolchain
+        - git clone https://github.com/BluewhaleRobot/rostoolchain
+        - export TOOLCHAIN_ROOT=$(pwd)/rostoolchain
+        # install boost-android
+        - wget -q https://test-1252517595.cos.ap-guangzhou.myqcloud.com/media/boost.tar.gz
+        - tar -xzvf boost.tar.gz | awk "(NR%200)==0{print;}"
+        # set up boost
+        - export INSTALL_PREFIX=/opt/ros/arm
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/armeabi-v7a/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp boost_libs/armeabi-v7a/lib/*.a $INSTALL_PREFIX/lib/
+        # create workspaces
+        - mkdir -p arm/src
+        - cd arm/src
+        - git clone https://github.com/ros/catkin --depth=1
+        - git clone https://github.com/ros/common_msgs --depth=1
+        - git clone https://github.com/ros/gencpp --depth=1
+        - git clone https://github.com/jsk-ros-pkg/geneus --depth=1
+        - git clone https://github.com/ros/genlisp --depth=1
+        - git clone https://github.com/ros/genmsg --depth=1
+        - git clone https://github.com/RethinkRobotics-opensource/gennodejs --depth=1
+        - git clone https://github.com/ros/genpy --depth=1
+        - git clone https://github.com/ros/message_generation --depth=1
+        - git clone https://github.com/ros/message_runtime --depth=1
+        - git clone https://github.com/BluewhaleRobot/ros_comm --depth=1
+        - git clone https://github.com/ros/ros_comm_msgs --depth=1
+        - git clone https://github.com/BluewhaleRobot/rosconsole --depth=1
+        - git clone https://github.com/BluewhaleRobot/roscpp_core --depth=1
+        - git clone https://github.com/ros/std_msgs --depth=1
+        # compile ros libs
+        - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python-catkin-tools > /dev/null
+        - cd ..
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../iot
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/armeabi-v7a
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/armeabi-v7a/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/armeabi-v7a/
+        ##########################################
+        # build arm64
+        - export INSTALL_PREFIX=/opt/ros/arm64
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/arm64-v8a/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/arm64-v8a/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p arm64/src
+        - cd arm64
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug  ..
+        - make
+        - cd ../../iot
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/arm64-v8a
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/arm64-v8a/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/arm64-v8a/
+        ##########################################
+        # build x86
+        - export INSTALL_PREFIX=/opt/ros/x86
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/x86/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/x86/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p x86/src
+        - cd x86
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../iot
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/x86
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/x86/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/x86/
+        ##########################################
+        # build x86_64
+        - export INSTALL_PREFIX=/opt/ros/x86_64
+        # setup boost
+        - sudo mkdir -p $INSTALL_PREFIX/include
+        - sudo mkdir -p $INSTALL_PREFIX/lib
+        - sudo cp -rf boost_libs/x86_64/include/boost-1_68/boost $INSTALL_PREFIX/include/
+        - sudo cp -rf boost_libs/x86_64/lib/*.a $INSTALL_PREFIX/lib/
+        # setup workspace
+        - mkdir -p x86_64/src
+        - cd x86_64
+        - cp -rf ../arm/src ./
+        # compile ros libs
+        - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug | awk "(NR%50)==0{print;}"
+        - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
+        - sudo cp -rf devel/lib/pkgconfig $INSTALL_PREFIX/lib/
+        - export PKG_CONFIG_PATH=$INSTALL_PREFIX/lib/pkgconfig
+        - cd ..
+        # install galileo sdk
+        - cd javagalileo/GalileoSDK/IotWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../iot
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make
+        - cd ../../GalileoSDK
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        - sudo make install
+        - cd ../../../
+        # compile jni wrapper
+        - cd JNIGalileoWrapper/JNIGalileoWrapper
+        - rm -rf build
+        - mkdir build
+        - cd build
+        - /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-x86_64.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
+        - make -j
+        # save libs
+        - cd ../../../../
+        - mkdir -p libs/x86_64
+        - sudo cp -rf javagalileo/JNIGalileoWrapper/JNIGalileoWrapper/build/libJNIGalileoWrapper.so libs/x86_64/
+        - sudo cp -rf $INSTALL_PREFIX/lib/*.so libs/x86_64/
+        # make package 
+        - cd javagalileo/javagalileo
+        - mvn package | awk "(NR%50)==0{print;}"
+        - cd ..
+        - mkdir -p deploy/javagalileo
+        - cd deploy
+        - cp ../javagalileo/target/javagalileo*.jar ./javagalileo/javagalileo-${TRAVIS_TAG}.jar
+        - cp -rf ../../libs ./javagalileo/
+        # compress libs
+        - tar -czvf javagalileo-android-${TRAVIS_TAG}.tar.gz javagalileo
+        - mv javagalileo-android-${TRAVIS_TAG}.tar.gz ../
+        - cd ..
+
+      deploy:
+        provider: releases
+        api_key: "$token"
+        file: "javagalileo-android-debug-${TRAVIS_TAG}.tar.gz"
+        skip_cleanup: true
+        overwrite: true
+        on:
+          branch: master
+          tags: true
