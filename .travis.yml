@@ -64,7 +64,7 @@ matrix:
         - git clone https://github.com/BluewhaleRobot/rosconsole --depth=1
         - git clone https://github.com/BluewhaleRobot/roscpp_core --depth=1
         - git clone https://github.com/ros/std_msgs --depth=1
-        - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python3-catkin-pkg python-catkin-tools  python3-catkin-tools > /dev/null
+        - sudo apt-get install -y --allow-unauthenticated python3-catkin-pkg python3-catkin-tools
         - cd ..
         - ./src/catkin/bin/catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DBoost_USE_STATIC_LIBS=ON -DBoost_LIB_PREFIX=lib -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - source ./devel/setup.bash
@@ -169,7 +169,7 @@ matrix:
         - git clone https://github.com/BluewhaleRobot/roscpp_core --depth=1
         - git clone https://github.com/ros/std_msgs --depth=1
         # compile ros libs
-        - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python3-catkin-pkg python-catkin-tools python3-catkin-tools > /dev/null
+        - sudo apt-get install -y --allow-unauthenticated python3-catkin-pkg python3-catkin-tools
         - cd ..
         - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
@@ -451,7 +451,7 @@ matrix:
         - git clone https://github.com/BluewhaleRobot/roscpp_core --depth=1
         - git clone https://github.com/ros/std_msgs --depth=1
         # compile ros libs
-        - travis_wait 20 sudo apt-get install -yqq --allow-unauthenticated python-catkin-pkg python3-catkin-pkg python-catkin-tools python3-catkin-tools> /dev/null
+        - sudo apt-get install -yqq --allow-unauthenticated python3-catkin-pkg python3-catkin-tools
         - cd ..
         - ./src/catkin/bin/catkin_make -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_ROOT/toolchain-arm.cmake -DCATKIN_WHITELIST_PACKAGES="" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug | awk "(NR%50)==0{print;}"
         - sudo cp -rf devel/lib/*.a $INSTALL_PREFIX/lib/
