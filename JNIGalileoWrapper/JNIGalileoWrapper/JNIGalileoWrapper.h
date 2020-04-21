@@ -2,6 +2,7 @@
 #define __JNI_GALILEO_WRAPPER_H__
 #include <jni.h>
 #include <javagalileo_GalileoSDK.h>
+#include <mutex>
 #ifdef __ANDROID__
 #include <android/log.h>
 #define LOGV(TAG,...) __android_log_print(ANDROID_LOG_VERBOSE, TAG,__VA_ARGS__)
@@ -21,4 +22,5 @@
 #else
 #include <GalileoSDK/GalileoSDK.h>
 #endif
+std::mutex mMutex;
 #endif // !__JNI_GALILEO_WRAPPER_H__

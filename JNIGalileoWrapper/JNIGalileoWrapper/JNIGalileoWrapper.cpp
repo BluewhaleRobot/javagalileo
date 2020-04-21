@@ -107,6 +107,7 @@ jobject ConvertGalileoReturnCode(JNIEnv *env, GalileoSDK::GALILEO_RETURN_CODE re
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobject, jlong instance, jstring targetID, jboolean auto_connect, jint timeout,
                                                               jobject OnConnect, jobject OnDisconnect)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     env->GetJavaVM(&jvm);
     // parse target id
@@ -114,12 +115,19 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     jsize length = env->GetStringUTFLength(targetID);
     std::string target_id_str(target_id, length);
     // set referance to callbacks
-    OnConnectCB = env->NewGlobalRef(OnConnect);
-    OnDisconnectCB = env->NewGlobalRef(OnDisconnect);
+    if(!env->IsSameObject(OnConnectCB, NULL)){
+        env->DeleteGlobalRef(OnConnectCB);
+        OnConnectCB = NULL;
+    }
+    if(!env->IsSameObject(OnDisconnectCB, NULL)){
+        env->DeleteGlobalRef(OnDisconnectCB);
+        OnDisconnectCB = NULL;
+    }
     // parse callback
     jmethodID OnConnectID = NULL;
     if (!env->IsSameObject(OnConnect, NULL))
     {
+        OnConnectCB = env->NewGlobalRef(OnConnect);
         jclass OnConnectClass = env->GetObjectClass(OnConnect);
         OnConnectID = env->GetMethodID(OnConnectClass, "OnConnected",
                                        "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -128,6 +136,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     jmethodID OnDisconnectID = NULL;
     if (!env->IsSameObject(OnDisconnect, NULL))
     {
+        OnDisconnectCB = env->NewGlobalRef(OnDisconnect);
         jclass OnDisconnectClass = env->GetObjectClass(OnDisconnect);
         OnDisconnectID = env->GetMethodID(OnDisconnectClass, "OnDisconnected",
                                           "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -141,6 +150,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     if (NULL != OnConnectID)
     {
         OnConnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -163,6 +173,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
     if (NULL != OnDisconnectID)
     {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -189,6 +200,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
 
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jobject, jlong instance, jstring targetID, jint timeout, jstring password, jobject OnConnect, jobject OnDisconnect)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     env->GetJavaVM(&jvm);
     // parse target id
@@ -199,12 +211,20 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     jsize password_length = env->GetStringLength(password);
     std::string password_str(password_id, password_length);
     // set referance to callbacks
-    OnConnectCB = env->NewGlobalRef(OnConnect);
-    OnDisconnectCB = env->NewGlobalRef(OnDisconnect);
+
+    if(!env->IsSameObject(OnConnectCB, NULL)){
+        env->DeleteGlobalRef(OnConnectCB);
+        OnConnectCB = NULL;
+    }
+    if(!env->IsSameObject(OnDisconnectCB, NULL)){
+        env->DeleteGlobalRef(OnDisconnectCB);
+        OnDisconnectCB = NULL;
+    }
     // parse callback
     jmethodID OnConnectID = NULL;
     if (!env->IsSameObject(OnConnect, NULL))
     {
+        OnConnectCB = env->NewGlobalRef(OnConnect);
         jclass OnConnectClass = env->GetObjectClass(OnConnect);
         OnConnectID = env->GetMethodID(OnConnectClass, "OnConnected",
                                        "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -213,6 +233,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     jmethodID OnDisconnectID = NULL;
     if (!env->IsSameObject(OnDisconnect, NULL))
     {
+        OnDisconnectCB = env->NewGlobalRef(OnDisconnect);
         jclass OnDisconnectClass = env->GetObjectClass(OnDisconnect);
         OnDisconnectID = env->GetMethodID(OnDisconnectClass, "OnDisconnected",
                                           "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
@@ -226,6 +247,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     if (NULL != OnConnectID)
     {
         OnConnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -248,6 +270,7 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     if (NULL != OnDisconnectID)
     {
         OnDisconnectTmp = [](GalileoSDK::GALILEO_RETURN_CODE status, std::string id) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -270,13 +293,6 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
     env->ReleaseStringUTFChars(targetID, target_id);
     env->ReleaseStringUTFChars(password, password_id);
     return ConvertGalileoReturnCode(env, res);
-}
-
-void Java_javagalileo_GalileoSDK_Disconnect(JNIEnv *env, jobject, jlong instance)
-{
-    GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
-    sdk->logger->info("Disconnect");
-    sdk->Disconnect();
 }
 
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_KeepConnection__JZI(JNIEnv* env, jobject, jlong instance, jboolean flag, jint maxRetry)
@@ -607,15 +623,20 @@ jobject OnStatusUpdateCB;
 
 JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback(JNIEnv *env, jobject, jlong instance, jobject onStatusUpdate)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     env->GetJavaVM(&jvm);
-    // set referance to callbacks
-    OnStatusUpdateCB = env->NewGlobalRef(onStatusUpdate);
 
     // parse callback
     jmethodID OnUpdateID = NULL;
     if (!env->IsSameObject(onStatusUpdate, NULL))
     {
+        // set referance to callbacks
+        if(!env->IsSameObject(OnStatusUpdateCB, NULL)){
+            env->DeleteGlobalRef(OnStatusUpdateCB);
+            OnStatusUpdateCB = NULL;
+        }
+        OnStatusUpdateCB = env->NewGlobalRef(onStatusUpdate);
         jclass OnUpdateClass = env->GetObjectClass(onStatusUpdate);
         OnUpdateID = env->GetMethodID(OnUpdateClass, "OnStatusUpdated",
                                       "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljavagalileo/models/GalileoStatus;)V");
@@ -627,6 +648,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback(JNIE
     if (NULL != OnUpdateID)
     {
         OnUpdateTmp = [](GalileoSDK::GALILEO_RETURN_CODE code, galileo_serial_server::GalileoStatus status) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -652,15 +674,20 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback(JNIE
 jobject OnGoalReachedCB;
 JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback(JNIEnv *env, jobject, jlong instance, jobject onGoalReached)
 {
+    std::unique_lock<std::mutex> lock(mMutex);
     GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
     env->GetJavaVM(&jvm);
-    // set referance to callbacks
-    OnGoalReachedCB = env->NewGlobalRef(onGoalReached);
 
     // parse callback
     jmethodID OnGoalReachedID = NULL;
     if (!env->IsSameObject(onGoalReached, NULL))
     {
+        // set referance to callbacks
+        if(!env->IsSameObject(OnGoalReachedCB, NULL)){
+            env->DeleteGlobalRef(OnGoalReachedCB);
+            OnGoalReachedCB = NULL;
+        }
+        OnGoalReachedCB = env->NewGlobalRef(onGoalReached);
         jclass OnGoalReachedClass = env->GetObjectClass(onGoalReached);
         OnGoalReachedID = env->GetMethodID(OnGoalReachedClass, "OnGoalReached",
                                            "(ILjavagalileo/models/GalileoStatus;)V");
@@ -672,6 +699,7 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback(JNIEnv
     if (NULL != OnGoalReachedID)
     {
         OnGoalReachedTmp = [](int goalIndex, galileo_serial_server::GalileoStatus status) {
+            std::unique_lock<std::mutex> lock(mMutex);
             JNIEnv *menv;
 #if !defined(__ANDROID__)
             jvm->AttachCurrentThread((void **)&menv, NULL);
@@ -691,6 +719,31 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback(JNIEnv
     }
 
     sdk->SetGoalReachedCallback(OnGoalReachedTmp);
+}
+
+JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_Disconnect(JNIEnv *env, jobject, jlong instance)
+{
+    std::unique_lock<std::mutex> lock(mMutex);
+    GalileoSDK::GalileoSDK *sdk = (GalileoSDK::GalileoSDK *)instance;
+    sdk->logger->info("Disconnect");
+    // 释放资源
+    if(!env->IsSameObject(OnConnectCB, NULL)){
+        env->DeleteGlobalRef(OnConnectCB);
+        OnConnectCB = NULL;
+    }
+    if(!env->IsSameObject(OnDisconnectCB, NULL)){
+        env->DeleteGlobalRef(OnDisconnectCB);
+        OnDisconnectCB = NULL;
+    }
+    if(!env->IsSameObject(OnStatusUpdateCB, NULL)){
+        env->DeleteGlobalRef(OnStatusUpdateCB);
+        OnStatusUpdateCB = NULL;
+    }
+    if(!env->IsSameObject(OnGoalReachedCB, NULL)){
+        env->DeleteGlobalRef(OnGoalReachedCB);
+        OnGoalReachedCB = NULL;
+    }
+    sdk->Disconnect();
 }
 
 JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_WaitForGoal(JNIEnv *env, jobject, jlong instance, jint goalIndex)
