@@ -157,14 +157,17 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnConnectClass = menv->GetObjectClass(OnConnectCB);
-            jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
-                                                      "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
-            if (NULL != OnConnectID)
+            if(!menv->IsSameObject(OnConnectCB, NULL))
             {
-                jobject statusJ = ConvertGalileoReturnCode(menv, status);
-                jstring idJ = menv->NewStringUTF(id.data());
-                menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
+                jclass OnConnectClass = menv->GetObjectClass(OnConnectCB);
+                jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
+                                                        "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
+                if (NULL != OnConnectID)
+                {
+                    jobject statusJ = ConvertGalileoReturnCode(menv, status);
+                    jstring idJ = menv->NewStringUTF(id.data());
+                    menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
@@ -180,14 +183,17 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_Connect(JNIEnv *env, jobje
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnDisconnectClass = menv->GetObjectClass(OnDisconnectCB);
-            jmethodID OnDisconnectID = menv->GetMethodID(OnDisconnectClass, "OnDisconnected",
-                                                         "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
-            if (NULL != OnDisconnectID)
+            if(!menv->IsSameObject(OnDisconnectCB, NULL))
             {
-                jobject statusJ = ConvertGalileoReturnCode(menv, status);
-                jstring idJ = menv->NewStringUTF(id.data());
-                menv->CallVoidMethod(OnDisconnectCB, OnDisconnectID, statusJ, idJ);
+                jclass OnDisconnectClass = menv->GetObjectClass(OnDisconnectCB);
+                jmethodID OnDisconnectID = menv->GetMethodID(OnDisconnectClass, "OnDisconnected",
+                                                            "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
+                if (NULL != OnDisconnectID)
+                {
+                    jobject statusJ = ConvertGalileoReturnCode(menv, status);
+                    jstring idJ = menv->NewStringUTF(id.data());
+                    menv->CallVoidMethod(OnDisconnectCB, OnDisconnectID, statusJ, idJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
@@ -254,14 +260,17 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnConnectClass = menv->GetObjectClass(OnConnectCB);
-            jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
-                                                      "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
-            if (NULL != OnConnectID)
+            if(!menv->IsSameObject(OnConnectCB, NULL))
             {
-                jobject statusJ = ConvertGalileoReturnCode(menv, status);
-                jstring idJ = menv->NewStringUTF(id.data());
-                menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
+                jclass OnConnectClass = menv->GetObjectClass(OnConnectCB);
+                jmethodID OnConnectID = menv->GetMethodID(OnConnectClass, "OnConnected",
+                                                        "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
+                if (NULL != OnConnectID)
+                {
+                    jobject statusJ = ConvertGalileoReturnCode(menv, status);
+                    jstring idJ = menv->NewStringUTF(id.data());
+                    menv->CallVoidMethod(OnConnectCB, OnConnectID, statusJ, idJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
@@ -277,14 +286,17 @@ JNIEXPORT jobject JNICALL Java_javagalileo_GalileoSDK_ConnectIOT(JNIEnv *env, jo
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnDisconnectClass = menv->GetObjectClass(OnDisconnectCB);
-            jmethodID OnDisconnectID = menv->GetMethodID(OnDisconnectClass, "OnDisconnected",
-                                                         "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
-            if (NULL != OnDisconnectID)
+            if(!menv->IsSameObject(OnDisconnectCB, NULL))
             {
-                jobject statusJ = ConvertGalileoReturnCode(menv, status);
-                jstring idJ = menv->NewStringUTF(id.data());
-                menv->CallVoidMethod(OnDisconnectCB, OnDisconnectID, statusJ, idJ);
+                jclass OnDisconnectClass = menv->GetObjectClass(OnDisconnectCB);
+                jmethodID OnDisconnectID = menv->GetMethodID(OnDisconnectClass, "OnDisconnected",
+                                                            "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljava/lang/String;)V");
+                if (NULL != OnDisconnectID)
+                {
+                    jobject statusJ = ConvertGalileoReturnCode(menv, status);
+                    jstring idJ = menv->NewStringUTF(id.data());
+                    menv->CallVoidMethod(OnDisconnectCB, OnDisconnectID, statusJ, idJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
@@ -655,14 +667,17 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetCurrentStatusCallback(JNIE
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnUpdateClass = menv->GetObjectClass(OnStatusUpdateCB);
-            jmethodID OnUpdateID = menv->GetMethodID(OnUpdateClass, "OnStatusUpdated",
-                                                     "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljavagalileo/models/GalileoStatus;)V");
-            if (NULL != OnUpdateID)
+            if(!menv->IsSameObject(OnStatusUpdateCB, NULL))
             {
-                jobject codeJ = ConvertGalileoReturnCode(menv, code);
-                jobject statusJ = ConvertGalileoStatus(menv, status);
-                menv->CallVoidMethod(OnStatusUpdateCB, OnUpdateID, codeJ, statusJ);
+                jclass OnUpdateClass = menv->GetObjectClass(OnStatusUpdateCB);
+                jmethodID OnUpdateID = menv->GetMethodID(OnUpdateClass, "OnStatusUpdated",
+                                                        "(Ljavagalileo/models/ServerInfo$GALILEO_RETURN_CODE;Ljavagalileo/models/GalileoStatus;)V");
+                if (NULL != OnUpdateID)
+                {
+                    jobject codeJ = ConvertGalileoReturnCode(menv, code);
+                    jobject statusJ = ConvertGalileoStatus(menv, status);
+                    menv->CallVoidMethod(OnStatusUpdateCB, OnUpdateID, codeJ, statusJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
@@ -706,13 +721,16 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_SetGoalReachedCallback(JNIEnv
 #else
             jvm->AttachCurrentThread((JNIEnv **)&menv, NULL);
 #endif // WIN32
-            jclass OnGoalReachedClass = menv->GetObjectClass(OnGoalReachedCB);
-            jmethodID OnUpdateID = menv->GetMethodID(OnGoalReachedClass, "OnGoalReached",
-                                                     "(ILjavagalileo/models/GalileoStatus;)V");
-            if (NULL != OnUpdateID)
+            if(!menv->IsSameObject(OnGoalReachedCB, NULL))
             {
-                jobject statusJ = ConvertGalileoStatus(menv, status);
-                menv->CallVoidMethod(OnGoalReachedCB, OnUpdateID, goalIndex, statusJ);
+                jclass OnGoalReachedClass = menv->GetObjectClass(OnGoalReachedCB);
+                jmethodID OnUpdateID = menv->GetMethodID(OnGoalReachedClass, "OnGoalReached",
+                                                        "(ILjavagalileo/models/GalileoStatus;)V");
+                if (NULL != OnUpdateID)
+                {
+                    jobject statusJ = ConvertGalileoStatus(menv, status);
+                    menv->CallVoidMethod(OnGoalReachedCB, OnUpdateID, goalIndex, statusJ);
+                }
             }
             jvm->DetachCurrentThread();
         };
