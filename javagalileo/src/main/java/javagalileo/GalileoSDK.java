@@ -30,6 +30,8 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     private native long CreateInstance();
 
+    private native long CreateInstance(String logPath);
+
     private native void ReleaseInstance(long instance);
 
     private native GALILEO_RETURN_CODE Connect(long instance, String targetID, boolean auto_connect, int timeout,
@@ -126,6 +128,10 @@ public class GalileoSDK { // Save as HelloJNI.java
 
     public GalileoSDK() {
         instance = CreateInstance();
+    }
+
+    public GalileoSDK(String logPath) {
+        instance = CreateInstance(logPath);
     }
 
     public void Release() {

@@ -20,8 +20,16 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_sayHello
  * Method:    CreateInstance
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance
+JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance__
   (JNIEnv *, jobject);
+
+/*
+ * Class:     javagalileo_GalileoSDK
+ * Method:    CreateInstance
+ * Signature: (Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     javagalileo_GalileoSDK

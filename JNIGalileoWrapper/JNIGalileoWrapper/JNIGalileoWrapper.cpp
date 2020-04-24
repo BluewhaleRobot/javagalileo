@@ -41,9 +41,20 @@ JNIEXPORT void JNICALL Java_javagalileo_GalileoSDK_sayHello(JNIEnv *, jobject)
     return;
 }
 
-JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance(JNIEnv *, jobject)
+JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance__(JNIEnv *, jobject)
 {
     GalileoSDK::GalileoSDK *instance = new GalileoSDK::GalileoSDK();
+    instance->logger->info("no log");
+    return (long)instance;
+}
+
+JNIEXPORT jlong JNICALL Java_javagalileo_GalileoSDK_CreateInstance__Ljava_lang_String_2
+  (JNIEnv *env, jobject, jstring logPath)
+{
+    const char *log_path = env->GetStringUTFChars(logPath, NULL);
+    jsize length = env->GetStringUTFLength(logPath);
+    std::string log_path_str(log_path, length);
+    GalileoSDK::GalileoSDK *instance = new GalileoSDK::GalileoSDK(log_path_str);
     return (long)instance;
 }
 
